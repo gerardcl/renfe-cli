@@ -26,54 +26,6 @@ url = 'http://horarios.renfe.com/HIRRenfeWeb/buscar.do?O={}&D={}&ID=s&AF={}&MF={
 
 tables = pd.read_html(url) # Returns list of all tables on page
 timetable = tables[4] # Select table of interest
+timetable = timetable.drop(timetable.columns[[4, 5, 6]], axis=1)
 
 print(timetable)
-
-
-
-
-# OLD - manual implementatation after pandas discovery
-
-# import urllib.request
-
-# web = urllib.request.urlopen(url)
-# content =  web.read().decode(web.headers.get_content_charset())
-
-# import re
-
-# data = re.subn(r'<(html).*?</\1>(?s)', '', content)[0]
-
-# from html.parser import HTMLParser
-
-# class MyHTMLParser(HTMLParser):
-
-#   def __init__(self):
-#     HTMLParser.__init__(self)
-#     self.recording = 0
-#     self.data = []
-
-#   def handle_starttag(self, tag, attrs):
-#     if tag == 'table':
-#       for name, value in attrs:
-#         if name == 'class' and value == 'txt_borde1':
-#           print(name, value)
-#           print("Encountered the beginning of a %s tag" % tag)
-#           self.recording = 1
-
-#   def handle_endtag(self, tag):
-#     if tag == 'table':
-#       self.recording -=1
-#       print("Encountered the end of a %s tag" % tag)
-
-#   def handle_data(self, data):
-#     if self.recording and re.sub('\s+', '', data) != '':
-#       self.data.append(re.sub('\s+', '', data))
-
-# parser = MyHTMLParser()
-
-# doc = parser.feed(data)
-
-
-# parser.close()
-
-# print(parser.data)
