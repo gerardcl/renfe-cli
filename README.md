@@ -21,7 +21,7 @@ Options:
 
  when using search functionality, it will provide you with the IDs (to use as an origin or destiation train station) of the stations that are similar to the input text to search. Example:
 
-```bash
+```
 ./renfe.py -s sil
 Today is: 2019-04-22
 Searching stations like: sil
@@ -52,7 +52,7 @@ VILANOVADELABARCA 75102
 ----
 Timetable defaults to `today`, from `Sils` (ID is `79202`) to `Barcelona` (ID is `BARCE`):
 
-```bash
+```
 ./renfe.py
 Today is: 2019-04-22
 Searching timetable for date: 2019-04-22
