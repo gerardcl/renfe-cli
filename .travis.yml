@@ -14,5 +14,5 @@ matrix:
       language: shell       # 'language: python' is an error on Travis CI Windows
       before_install: choco install python && pip install nose
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
-install: python setup.py install
+install: python3 setup.py install
 script: nosetests
