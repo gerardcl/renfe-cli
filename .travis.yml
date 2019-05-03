@@ -7,7 +7,7 @@ matrix:
     - name: "Python 3.7 on macOS"
       os: osx
       osx_image: xcode10.2  # Python 3.7.2 running on macOS 10.14.3
-      before_install: pip3 install requests nose
+      before_install: pip3 install requests nose --upgrade
       language: shell       # 'language: python' is an error on Travis CI macOS
     - name: "Python 3.7 on Windows"
       os: windows           # Windows 10.0.17134 N/A Build 17134
@@ -15,4 +15,4 @@ matrix:
       before_install: choco install python && pip install nose
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
 install: python setup.py install
-script: python -m nose
+script: python --version && python -m nose
