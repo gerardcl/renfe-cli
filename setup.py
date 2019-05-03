@@ -38,6 +38,7 @@ setup(
         'Operating System :: MacOS :: MacOS X',
         'Operating System :: Unix',
         'Operating System :: POSIX',
+        'Operating System :: Windows',
         'Programming Language :: Python',
         'Topic :: Utilities',
         'Topic :: Terminals',
