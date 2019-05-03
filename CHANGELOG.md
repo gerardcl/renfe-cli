@@ -6,6 +6,12 @@
 
 # Changelog
 
+## v1.0.1 (2019-05-04)
+
+* Travis CI integration
+* Travis CI tests working within Windows, OSX and Linux
+* Readme update
+
 ## v1.0.0 (2019-05-03)
 
 * Creation of python package.
