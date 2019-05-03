@@ -5,6 +5,8 @@ Get faster RENFE Spanish Trains timetables in your terminal.
 
 - Installation:
 
+Install python CLI package [renfe-cli](https://pypi.org/project/renfe-cli/)
+
 ```
 $ pip install renfe-cli
 ```
