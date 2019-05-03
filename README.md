@@ -1,10 +1,19 @@
 RENFE TIMETABLES CLI
 ====================
 
-Usage:
+Get faster RENFE Spanish Trains timetables in your terminal.
+
+- Installation:
+
 ```
-./renfe.py -h
-Usage: renfe.py [options]
+$ pip install renfe-cli
+```
+
+- Usage:
+
+```
+$ renfe-cli -h
+Usage: renfe-cli [options]
 
 Options:
   -h, --help            show this help message and exit
@@ -19,10 +28,10 @@ Options:
 **Searching for IDs of train stations**
 ----
 
- when using search functionality, it will provide you with the IDs (to use as an origin or destiation train station) of the stations that are similar to the input text to search. Example:
+ When using search functionality, it will provide you with the IDs (to use as an origin or destiation train station) of the stations that are similar to the input text to search. Example:
 
 ```
-./renfe.py -s sil
+$ renfe-cli -s sil
 Today is: 2019-04-22
 Searching stations like: sil
 SANESTEVODOSIL 22003
@@ -30,7 +39,7 @@ SANPEDRODOSIL 22004
 SILLA 64200
 SILS 79202
 
-./renfe.py -s barc
+$ renfe-cli -s barc
 Today is: 2019-04-22
 Searching stations like: barc
 BARCELONA 97007
@@ -53,7 +62,7 @@ VILANOVADELABARCA 75102
 Timetable defaults to `today`, from `Sils` (ID is `79202`) to `Barcelona` (ID is `BARCE`):
 
 ```
-./renfe.py
+$ renfe-cli
 Today is: 2019-04-22
 Searching timetable for date: 2019-04-22
 From 79202 to BARCE
@@ -91,7 +100,7 @@ From 79202 to BARCE
 Which would be the same as:
 
 ```
-./renfe.py -y 2019 -m 4 -d 22 -o 79202 -t BARCE
+$ renfe-cli -y 2019 -m 4 -d 22 -o 79202 -t BARCE
 Today is: 2019-04-22
 Searching timetable for date: 2019-04-22
 From 79202 to BARCE
@@ -126,6 +135,23 @@ From 79202 to BARCE
 27         15904 MD   21.27    22.39  1 h. 12 min.
 ```
 
+
+---
+
 Issues
 ----
 If Renfe's website is changed please fire an issue in order to update the parsing methods and get it working again.
+
+
+Installation alternatives (getting latest source code)
+----
+If you want to install latest source code:
+```
+$ pip install git+http://github.com/gerardcl/renfe-cli
+```
+or
+```
+$ git clone git://github.com/jsmits/github-cli.git
+$ cd github-cli
+$ python setup.py install
+```
