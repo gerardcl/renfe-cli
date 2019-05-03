@@ -4,15 +4,19 @@ matrix:
     - name: "Python 3.7 on Xenial Linux"
       python: 3.7           # this works for Linux but is ignored on macOS or Windows
       dist: xenial          # required for Python >= 3.7
+      install: python setup.py install
+      script: python --version && python -m nose
     - name: "Python 3.7 on macOS"
       os: osx
       osx_image: xcode10.2  # Python 3.7.2 running on macOS 10.14.3
       before_install: pip3 install requests nose --upgrade
       language: shell       # 'language: python' is an error on Travis CI macOS
+      install: python3 setup.py install
+      script: python3 --version && python -m nose
     - name: "Python 3.7 on Windows"
       os: windows           # Windows 10.0.17134 N/A Build 17134
       language: shell       # 'language: python' is an error on Travis CI Windows
       before_install: choco install python && pip install nose
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
-install: python setup.py install
-script: python --version && python -m nose
+      install: python setup.py install
+      script: python --version && python -m nose
