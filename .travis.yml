@@ -1,15 +1,15 @@
 language: python            # this works for Linux but is an error on macOS or Windows
 matrix:
   include:
-    - name: "Python 3.7.1 on Xenial Linux"
+    - name: "Python 3.7 on Xenial Linux"
       python: 3.7           # this works for Linux but is ignored on macOS or Windows
       dist: xenial          # required for Python >= 3.7
-    - name: "Python 3.7.2 on macOS"
+    - name: "Python 3.7 on macOS"
       os: osx
       osx_image: xcode10.2  # Python 3.7.2 running on macOS 10.14.3
-      before_install: python -m pip install requests nose
+      before_install: pip3 install requests nose
       language: shell       # 'language: python' is an error on Travis CI macOS
-    - name: "Python 3.7.3 on Windows"
+    - name: "Python 3.7 on Windows"
       os: windows           # Windows 10.0.17134 N/A Build 17134
       language: shell       # 'language: python' is an error on Travis CI Windows
       before_install: choco install python && pip install nose
