@@ -155,7 +155,7 @@ $ pip install git+http://github.com/gerardcl/renfe-cli
 ```
 or
 ```
-$ git clone git://github.com/jsmits/github-cli.git
+$ git clone git://github.com/gerardcl/renfe-cli
 $ cd github-cli
 $ python setup.py install
 ```
