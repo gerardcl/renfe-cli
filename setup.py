@@ -10,7 +10,7 @@ long_description = read('README.md')
 
 setup(
     name='renfe-cli',
-    version='1.0.0',
+    version='1.0.1',
     description='Get faster RENFE Spanish Trains timetables in your terminal',
     long_description=long_description,
     keywords='Get faster RENFE Spanish Trains timetables terminal',
