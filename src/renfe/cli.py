@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 import optparse
+import logging
 from datetime import date
+
+LOGGING_LEVELS = {'critical': logging.CRITICAL,
+                  'error': logging.ERROR,
+                  'warning': logging.WARNING,
+                  'info': print,
+                  'debug': logging.DEBUG}
 
 def main():
 
@@ -10,14 +17,22 @@ def main():
 
   # opt parser
   p = optparse.OptionParser()
-  p.add_option('--year', '-y', default=today.year)
-  p.add_option('--month', '-m', default=today.month)
-  p.add_option('--day', '-d', default=today.day)
-  p.add_option('--origin', '-o', default=stations.get('SILS'))
-  p.add_option('--to', '-t', default=stations.get('BCN'))
-  p.add_option('--search', '-s', default='')
+  p.add_option('--year', '-y', default=today.year, help='Year selected to get the timetable from')
+  p.add_option('--month', '-m', default=today.month, help='Month of the year to get the timetable from')
+  p.add_option('--day', '-d', default=today.day, help='Day of the month to get the timetable from')
+  p.add_option('--origin', '-o', default=stations.get('SILS'), help='From/Origin ID of the train station. Use flag \'-s <possible station name>\' in order to search for IDs')
+  p.add_option('--to', '-t', default=stations.get('BCN'), help='To/Destination ID of the train station. Use flag \'-s <possible station name>\' in order to search for IDs')
+  p.add_option('--search', '-s', default='', help='You need to get the stations IDs, searching by names; in order to apply right inputs for origins and/or destinations')
+  p.add_option('--logging-level', '-l', help='Logging level')
+  p.add_option('--logging-file', '-f', help='Logging file name')
 
   options, arguments = p.parse_args()
+
+  # Logging defaults to warning: critical, error and warning messages.
+  logging_level = LOGGING_LEVELS.get(options.logging_level, logging.NOTSET)
+  logging.basicConfig(level=logging_level, filename=options.logging_file,
+                      format='%(asctime)s %(levelname)s: %(message)s',
+                      datefmt='%Y-%m-%d %H:%M:%S')
 
   print("Today is: {}".format(today))
 
@@ -37,6 +52,8 @@ def main():
     print("From {} to {}".format(options.origin, options.to))
 
     urlTimetable = 'http://horarios.renfe.com/HIRRenfeWeb/buscar.do?O={}&D={}&ID=s&AF={}&MF={}&DF={}'.format(options.origin, options.to, options.year, options.month, options.day)
+
+    logging.debug(urlTimetable)
 
     tables = pd.read_html(urlTimetable) # Returns list of all tables on page
     timetable = tables[4] # Select table of interest
