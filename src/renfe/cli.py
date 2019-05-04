@@ -73,7 +73,7 @@ def main():
 
     import re
 
-    data = re.subn(r'<(html).*?</\1>(?s)', '', content)[0]
+    data = re.subn('', content,r'<(html).*?</\1>(?s)')[0]
 
     from html.parser import HTMLParser
 
