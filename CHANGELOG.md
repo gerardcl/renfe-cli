@@ -11,6 +11,7 @@
 * Enhanced logging and debug options
 * Error handling
 * Pre-checks
+* PyPi with RST formatted readme [#3](https://github.com/gerardcl/renfe-cli/issues/3)
 
 ## v1.0.2 (2019-05-04)
 
