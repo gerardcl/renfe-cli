@@ -6,6 +6,12 @@
 
 # Changelog
 
+## v1.1.0 (2019-05-05)
+
+* Enhanced logging and debug options
+* Error handling
+* Pre-checks
+
 ## v1.0.2 (2019-05-04)
 
 * Defaults overwritting solved [#4](https://github.com/gerardcl/renfe-cli/issues/4)
