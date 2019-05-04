@@ -23,7 +23,7 @@ setup(
     py_modules=['renfe-cli'],
     include_package_data=True,
     install_requires=[
-        'setuptools', 'lxml', 'numpy', 'pandas', 'python-dateutil', 'pytz', 'six'
+        'setuptools', 'lxml', 'numpy', 'pandas', 'python-dateutil', 'pytz', 'six', 'colorama'
     ],
     entry_points="""
         [console_scripts]
