@@ -6,6 +6,10 @@
 
 # Changelog
 
+## v1.1.1 (2019-05-05)
+
+* Travis CI deploying releases through git tags to PyPI
+
 ## v1.1.0 (2019-05-05)
 
 * Enhanced logging and debug options
