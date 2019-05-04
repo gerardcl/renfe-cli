@@ -31,7 +31,7 @@ def main():
   options, arguments = p.parse_args()
 
   # Logging defaults to warning: critical, error and warning messages.
-  logging_level = LOGGING_LEVELS.get(options.logging_level, logging.NOTSET)
+  logging_level = LOGGING_LEVELS.get(options.logging_level, logging.WARN)
   logging.basicConfig(level=logging_level, filename=options.logging_file,
                       format='%(asctime)s %(levelname)s: %(message)s',
                       datefmt='%Y-%m-%d %H:%M:%S')
