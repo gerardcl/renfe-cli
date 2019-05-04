@@ -3,16 +3,18 @@ import os
 
 from setuptools import setup, find_packages
 
-def read(*parts):
-    return codecs.open(os.path.join(os.path.abspath(os.path.dirname(__file__)), *parts), 'r').read()
-
-long_description = read('README.md')
+try:
+    from pypandoc import convert
+    read_md = lambda f: convert(f, 'rst')
+except ImportError:
+    print("warning: pypandoc module not found, could not convert Markdown to RST")
+    read_md = lambda f: open(f, 'r').read()
 
 setup(
     name='renfe-cli',
     version='1.1.0',
     description='Get faster RENFE Spanish Trains timetables in your terminal',
-    long_description=long_description,
+    long_description=read_md('README.md'),
     keywords='Get faster RENFE Spanish Trains timetables terminal',
     author='Gerard Castillo',
     author_email='gerardcl@gmail.com',
