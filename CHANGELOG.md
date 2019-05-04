@@ -1,10 +1,14 @@
 <!--
- Copyright 2019 gerardcastillolasheras. All rights reserved.
+ Copyright 2019 @gerardcl. All rights reserved.
  Use of this source code is governed by a BSD-style
  license that can be found in the LICENSE file.
 -->
 
 # Changelog
+
+## v1.1.2 (2019-05-05)
+
+* Reverting Travis CI deploy stage from previous release and opened issue [#5](https://github.com/gerardcl/renfe-cli/issues/5)
 
 ## v1.1.1 (2019-05-05)
 
