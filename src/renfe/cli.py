@@ -36,7 +36,7 @@ def main():
     print("Searching timetable for date: {}-{}-{}".format(options.year, options.month, options.day))
     print("From {} to {}".format(options.origin, options.to))
 
-    urlTimetable = 'http://horarios.renfe.com/HIRRenfeWeb/buscar.do?O={}&D={}&ID=s&AF={}&MF={}&DF={}'.format(stations.get(options.origin, stations.get('SILS')), stations.get(options.to, stations.get('BCN')), options.year, options.month, options.day)
+    urlTimetable = 'http://horarios.renfe.com/HIRRenfeWeb/buscar.do?O={}&D={}&ID=s&AF={}&MF={}&DF={}'.format(options.origin, options.to, options.year, options.month, options.day)
 
     tables = pd.read_html(urlTimetable) # Returns list of all tables on page
     timetable = tables[4] # Select table of interest

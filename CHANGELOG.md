@@ -6,6 +6,10 @@
 
 # Changelog
 
+## v1.0.2 (2019-05-04)
+
+* Defaults overwritting solved [#4](https://github.com/gerardcl/renfe-cli/issues/4)
+
 ## v1.0.1 (2019-05-04)
 
 * Travis CI integration
