@@ -1,9 +1,12 @@
 [![Build Status](https://travis-ci.org/gerardcl/renfe-cli.svg?branch=master)](https://travis-ci.org/gerardcl/renfe-cli)
 
-RENFE TIMETABLES CLI 
+RENFE TIMETABLES CLI
 ====================
 
 Get faster RENFE Spanish Trains timetables in your terminal.
+
+See the [changelog](CHANGELOG.md)
+
 
 - Installation:
 
