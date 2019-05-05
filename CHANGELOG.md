@@ -6,6 +6,10 @@
 
 # Changelog
 
+## v1.1.6 (2019-05-05)
+
+* Travis CI automated deployment to PyPI through Linux job when new tag released. Closes [#6](https://github.com/gerardcl/renfe-cli/issues/6)
+
 ## v1.1.2 (2019-05-05)
 
 * Reverting Travis CI deploy stage from previous release and opened issue [#5](https://github.com/gerardcl/renfe-cli/issues/5)
