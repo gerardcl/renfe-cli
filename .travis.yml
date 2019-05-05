@@ -6,7 +6,6 @@ matrix:
     dist: xenial
     install: python setup.py install
     script: python -m nose
-    before_deploy: python -m pip install pypandoc twine --upgrade
   - name: Python 3.7 on macOS
     os: osx
     osx_image: xcode10.2
@@ -15,6 +14,16 @@ matrix:
     install: python3 setup.py install
     script: python3 -m nose
     before_deploy: pip3 install pypandoc twine --upgrade
+    deploy:
+      provider: pypi
+      user: gerardcl
+      password:
+        secure: ZyJI8z6787HKrqoP1J1rYxEQsPG4rf0nDR1q4UsEaLJ5e2ERzv85VNhZUDUi9yXUZ5leiYHrQ3xJ0trr0UmeiPNdW4p3RzECt3ubGEgKTnpFXwle/V74YBjJ67k+UrxZits93RiLcYm03YxAU3nehTiqrjYFska4vfpix66yHTgrHS2/bo7To5Js/TMJn6ZGBUBGye/HgZG27TRg6plvvqqmVeGMGlH+m5/OvVDxXonIVFu1YVpcgBGkmhyREWa9XjSbfiqp9TX2SG8fy49oaZdoA3Xqo93QHhgAQHTfrkgkIzVts72jzlCUuqAPbzqKQOvATlZ1muupVkkrKb6R+qFQw3+ZnieFl532HkGuEIU+cVbds3v0VJ0s3UVKImi9oH2GY7qvayyMKDUWwFxNt/JSdrQLBjKPz5NJbBZPpQGDyDcDWpf38TAJ9ba02atV93uMMiy67ZaHxuChET3DleycM7NYMLtK+LK5qmIs1kdh8k6+huXXbUyuu2L6cHoKx936VYWxTPVNUDWGxF/4/68Zi60DXYHz5K3JG3pA3UiqmmdH7ZG2FMscesgAboMnXP0NP2DJUt8KNGaZM0s323TioytfIbiTd9N9Gx5iTsotziFG2YLRGtoFuvBRAUYgp3pyskIVQJu8aIM9iU61lKdWlZ7T1R89qxCFVzVx0OI=
+      # on:
+      #   tags: true
+      distributions: "sdist bdist_wheel"
+      skip_existing: true
+      skip_cleanup: true
   - name: Python 3.7 on Windows
     os: windows
     language: shell
@@ -22,17 +31,6 @@ matrix:
     env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
     install: python setup.py install
     script: python -m nose
-    before_deploy: pip install pypandoc twine --upgrade
-deploy:
-  provider: pypi
-  user: gerardcl
-  password:
-    secure: ZyJI8z6787HKrqoP1J1rYxEQsPG4rf0nDR1q4UsEaLJ5e2ERzv85VNhZUDUi9yXUZ5leiYHrQ3xJ0trr0UmeiPNdW4p3RzECt3ubGEgKTnpFXwle/V74YBjJ67k+UrxZits93RiLcYm03YxAU3nehTiqrjYFska4vfpix66yHTgrHS2/bo7To5Js/TMJn6ZGBUBGye/HgZG27TRg6plvvqqmVeGMGlH+m5/OvVDxXonIVFu1YVpcgBGkmhyREWa9XjSbfiqp9TX2SG8fy49oaZdoA3Xqo93QHhgAQHTfrkgkIzVts72jzlCUuqAPbzqKQOvATlZ1muupVkkrKb6R+qFQw3+ZnieFl532HkGuEIU+cVbds3v0VJ0s3UVKImi9oH2GY7qvayyMKDUWwFxNt/JSdrQLBjKPz5NJbBZPpQGDyDcDWpf38TAJ9ba02atV93uMMiy67ZaHxuChET3DleycM7NYMLtK+LK5qmIs1kdh8k6+huXXbUyuu2L6cHoKx936VYWxTPVNUDWGxF/4/68Zi60DXYHz5K3JG3pA3UiqmmdH7ZG2FMscesgAboMnXP0NP2DJUt8KNGaZM0s323TioytfIbiTd9N9Gx5iTsotziFG2YLRGtoFuvBRAUYgp3pyskIVQJu8aIM9iU61lKdWlZ7T1R89qxCFVzVx0OI=
-  # on:
-  #   tags: true
-  distributions: "sdist bdist_wheel"
-  skip_existing: true
-  skip_cleanup: true
 notifications:
   email:
     on_success: never
