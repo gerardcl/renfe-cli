@@ -6,6 +6,10 @@
 
 # Changelog
 
+## v1.1.7 (2019-05-05)
+
+* Codecoverage: Travis CI with SonarCloud integration
+
 ## v1.1.6 (2019-05-05)
 
 * Travis CI automated deployment to PyPI through Linux job when new tag released. Closes [#6](https://github.com/gerardcl/renfe-cli/issues/6)

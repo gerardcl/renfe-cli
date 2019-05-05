@@ -24,23 +24,23 @@ Usage: renfe-cli [options]
 
 Options:
   -h, --help            show this help message and exit
-  -y YEAR, --year=YEAR  Year selected to get the timetable from
+  -y YEAR, --year=YEAR  year selected to get the timetable from
   -m MONTH, --month=MONTH
-                        Month of the year to get the timetable from
-  -d DAY, --day=DAY     Day of the month to get the timetable from
+                        month of the year to get the timetable from
+  -d DAY, --day=DAY     day of the month to get the timetable from
   -o ORIGIN, --origin=ORIGIN
-                        From/Origin ID of the train station. Use flag '-s
+                        from/origin ID of the train station. Use flag '-s
                         <possible station name>' in order to search for IDs
-  -t TO, --to=TO        To/Destination ID of the train station. Use flag '-s
+  -t TO, --to=TO        to/destination ID of the train station. Use flag '-s
                         <possible station name>' in order to search for IDs
   -s SEARCH, --search=SEARCH
-                        You need to get the stations IDs, searching by names;
+                        you need to get the stations IDs, searching by names;
                         in order to apply right inputs for origins and/or
                         destinations
   -l LOGGING_LEVEL, --logging-level=LOGGING_LEVEL
-                        Logging level
+                        logging level
   -f LOGGING_FILE, --logging-file=LOGGING_FILE
-                        Logging file name (required if you want to submit an
+                        logging file name (required if you want to submit an
                         issue with more information)
 ```
 

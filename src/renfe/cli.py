@@ -19,14 +19,14 @@ def main():
 
   # opt parser
   p = optparse.OptionParser()
-  p.add_option('--year', '-y', default=today.year, help='Year selected to get the timetable from')
-  p.add_option('--month', '-m', default=today.month, help='Month of the year to get the timetable from')
-  p.add_option('--day', '-d', default=today.day, help='Day of the month to get the timetable from')
-  p.add_option('--origin', '-o', default=stations.get('SILS'), help='From/Origin ID of the train station. Use flag \'-s <possible station name>\' in order to search for IDs')
-  p.add_option('--to', '-t', default=stations.get('BCN'), help='To/Destination ID of the train station. Use flag \'-s <possible station name>\' in order to search for IDs')
-  p.add_option('--search', '-s', default='', help='You need to get the stations IDs, searching by names; in order to apply right inputs for origins and/or destinations')
-  p.add_option('--logging-level', '-l', help='Logging level')
-  p.add_option('--logging-file', '-f', help='Logging file name (required if you want to submit an issue with more information)')
+  p.add_option('--year', '-y', default=today.year, help='year selected to get the timetable from')
+  p.add_option('--month', '-m', default=today.month, help='month of the year to get the timetable from')
+  p.add_option('--day', '-d', default=today.day, help='day of the month to get the timetable from')
+  p.add_option('--origin', '-o', default=stations.get('SILS'), help='from/origin ID of the train station. Use flag \'-s <possible station name>\' in order to search for IDs')
+  p.add_option('--to', '-t', default=stations.get('BCN'), help='to/destination ID of the train station. Use flag \'-s <possible station name>\' in order to search for IDs')
+  p.add_option('--search', '-s', default='', help='you need to get the stations IDs, searching by names; in order to apply right inputs for origins and/or destinations')
+  p.add_option('--logging-level', '-l', help='logging level')
+  p.add_option('--logging-file', '-f', help='logging file name (required if you want to submit an issue with more information)')
 
   options, arguments = p.parse_args()
 
