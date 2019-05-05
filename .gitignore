@@ -125,5 +125,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-#
+# sonar
+.sonar_lock
+report-task.txt
+
+# IDE
 .vscode
