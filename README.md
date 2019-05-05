@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/gerardcl/renfe-cli.svg?branch=master)](https://travis-ci.org/gerardcl/renfe-cli)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gerardcl_renfe-cli&metric=alert_status)](https://sonarcloud.io/dashboard?id=gerardcl_renfe-cli) [![Build Status](https://travis-ci.org/gerardcl/renfe-cli.svg?branch=master)](https://travis-ci.org/gerardcl/renfe-cli)
 
 RENFE TIMETABLES CLI
 ====================
@@ -19,7 +19,7 @@ $ pip install renfe-cli
 - Usage:
 
 ```
-$ renfe-cli -h    
+$ renfe-cli -h
 Usage: renfe-cli [options]
 
 Options:
@@ -81,7 +81,7 @@ VILANOVADELABARCA: 75102
 Timetable defaults to `today`, from `Sils` (ID is `79202`) to `Barcelona` (ID is `BARCE`):
 
 ```
-$ renfe-cli        
+$ renfe-cli
 Today is: 2019-05-05
 Searching timetable for date: 2019-05-05
 From 79202 to BARCE

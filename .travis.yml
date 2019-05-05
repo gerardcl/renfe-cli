@@ -5,11 +5,15 @@ matrix:
     python: 3.7
     dist: xenial
     install: python setup.py install
-    script: python -m nose
+    script: sonar-scanner && python -m nose
     addons:
       apt:
         packages:
         - pandoc
+      sonarcloud:
+        organization: gerardcl-github
+        token:
+          secure: "kfvzYdOUF89a6tSziG2NkVPXDD31x8uRnz6kfCoiVan+pZrc1ZXGzJc3XFiH3bgfQGNNJq39fkPkegTkFDrPzEox1S9lbfBl+e2elke3cxSN8DhExxrl9MecBNckyEacHSS2PEfDIDoxwXqzFGkRFwna4bBFHMvxkyU5jhRQVRgll7ZsT+MRHc3Q5Wl+/s75FK+mTVj5YsWwaqSAHLoXyP+bkNEnzqn1OKNMIkcMKMCD7B2ZNXeGd1QrD9duGX7Q4GlhVWrA+OXfokPJm1twg+kL4LSPJT62ychC0ewEDQ8tQ5dM+85VQSZJJJCr/5HDm5qHVX1cVqXMFKGEVuCdK5RKfX9Qq9ykKK0a0CtGw/SKieh6jL45GRTtyiDqhilwGy8SemLaVFy0kKqWVLifg7XCA8+aAoFjBR8R0M7a0btsP7dDZaohOUApiz9ifSCky4a8/Bys42a+chMV9AwdmgEcsLa8dlYo+uFM3Qckn8OTbr/60gDUMyFJ+DhStRWtnUQcu5JItLocbaFdNn4S6tSEPa4Ecrl+jemlfrFKGmv7oOTTruwINTT4LwbdZ9cdJ9/p+f0VZ0iRdxVQ//0pZpjhiDaqviorZQRXnuMZOXOR0osHdzl2L5HuBBw05OAJRvwTWzguTs+hVihskaeop+y1j3jmCp20jb9j9n7uum4="
     before_deploy: python -m pip install pypandoc pandoc twine --upgrade
     deploy:
       provider: pypi
