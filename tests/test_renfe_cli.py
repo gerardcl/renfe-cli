@@ -2,7 +2,6 @@ import os
 import sys
 from datetime import date
 from nose.tools import assert_raises
-
 from renfe.cli import main
 
 prog = 'renfe-cli'
@@ -33,5 +32,4 @@ test_input = (
 
     # search
     ('-s sil', None), ('-s barc', None)
-
 )
