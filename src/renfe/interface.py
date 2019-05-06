@@ -56,7 +56,6 @@ def search_stations_ids(search):
     parser.close()
 
     stations_with_id = dict(zip(parser.data, parser.links))
-    # logging.debug(stations_with_id)
 
     # show findings
     for key in stations_with_id:
