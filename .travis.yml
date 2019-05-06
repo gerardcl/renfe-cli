@@ -5,7 +5,7 @@ matrix:
     python: 3.7
     dist: xenial
     install: python setup.py install
-    script: python -m pip install coverage && python -m nose --with-coverage --cover-erase --cover-package=renfe --cover-xml && sonar-scanner -Dsonar.projectKey=gerardcl_renfe-cli -Dsonar.python.xunit.reportPath=nosetests.xml -Dsonar.python.coverage.reportPaths=coverage.xml
+    script: python -m pip install coverage && python -m nose --with-xunit --with-coverage --cover-erase --cover-package=renfe --cover-xml && sonar-scanner -Dsonar.projectKey=gerardcl_renfe-cli -Dsonar.python.xunit.reportPath=nosetests.xml -Dsonar.python.coverage.reportPaths=coverage.xml
     addons:
       apt:
         packages:
