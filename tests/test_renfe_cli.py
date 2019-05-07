@@ -29,6 +29,12 @@ test_input = (
   # default
   ('', None),
 
+  # change default
+  ('-o 79300 -u', None),
+
+  # new default
+  ('', None),
+
   # same as default
   ('-y {} -m {} -d {} -o 79202 -t BARCE'.format(today.year, today.month, today.day), None),
 
