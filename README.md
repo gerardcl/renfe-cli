@@ -3,21 +3,22 @@
 RENFE TIMETABLES CLI
 ====================
 
-Get faster RENFE Spanish Trains timetables in your terminal.
+Get faster RENFE Spanish trains timetables in your terminal. Works on Linux, OSX and Windows Python3 (see [builds](https://travis-ci.org/gerardcl/renfe-cli)).
 
-See the [changelog](https://github.com/gerardcl/renfe-cli/blob/master/CHANGELOG.md)
+See the [changelog](https://github.com/gerardcl/renfe-cli/blob/master/CHANGELOG.md).
 
 
-- Installation:
+Installation
+------------
 
-Install python CLI package [renfe-cli](https://pypi.org/project/renfe-cli/)
+Install Python CLI package [renfe-cli](https://pypi.org/project/renfe-cli/)
 
 ```
-$ pip install renfe-cli
+$ pip install renfe-cli --upgrade
 ```
 
-- Usage:
-
+Usage
+-----
 ```
 $ renfe-cli -h
 Usage: renfe-cli [options]
@@ -38,14 +39,17 @@ Options:
                         in order to apply right inputs for origins and/or
                         destinations
   -l LOGGING_LEVEL, --logging-level=LOGGING_LEVEL
-                        logging level
+                        logging level defaults to warning and possible values
+                        are: debug, info, warning, error and critical
   -f LOGGING_FILE, --logging-file=LOGGING_FILE
-                        logging file name (required if you want to submit an
-                        issue with more information)
+                        logging file name is required if you want to submit an
+                        issue with more information
+  -u, --update-config   change your origin and destination stations to
+                        defaults when loading this flag
 ```
 
-**Searching for IDs of train stations**
-----
+
+### **Searching for IDs of train stations**
 
  When using search functionality, it will provide you with the IDs (to use as an origin or destiation train station) of the stations that are similar to the input text to search. Example:
 
@@ -76,8 +80,8 @@ TANGERVILLE-BARCO: 99125
 VILANOVADELABARCA: 75102
 ```
 
-**Getting the timetable**
-----
+### **Getting the timetable**
+
 Timetable defaults to `today`, from `Sils` (ID is `79202`) to `Barcelona` (ID is `BARCE`):
 
 ```
@@ -134,16 +138,25 @@ From 79202 to BARCE
 ==================================================
 ```
 
+### **Changing default origin and/or destination stations**
+In order to change default timetable stations you just need to add `-u` flag in the CLI, and next time you won't need to add the used `-o` and `-t` params:
+
+```
+$ renfe-cli -o MADRI -t BARCE -u
+```
+
+If changing defaults, a file is created under user's home directory in file `~/.renfe_default_stations.json`
+
 
 ---
 
 Issues
-----
-If Renfe's website is changed please [create an issue](https://github.com/gerardcl/renfe-cli/issues) in order to update the parsing methods and get it working again.
+------
+If Renfe's website is changed or you find any issue or enhancements, please: [create an issue](https://github.com/gerardcl/renfe-cli/issues)
 
 
 Installation alternatives (getting latest source code)
-----
+------------------------------------------------------
 If you want to install latest source code:
 ```
 $ pip install git+http://github.com/gerardcl/renfe-cli
@@ -151,6 +164,6 @@ $ pip install git+http://github.com/gerardcl/renfe-cli
 or
 ```
 $ git clone git://github.com/gerardcl/renfe-cli
-$ cd github-cli
+$ cd renfe-cli
 $ python setup.py install
 ```

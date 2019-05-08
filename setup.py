@@ -9,7 +9,7 @@ except ImportError:
 
 setup(
     name='renfe-cli',
-    version='1.1.8',
+    version='2.0.0',
     description='Get faster RENFE Spanish Trains timetables in your terminal',
     long_description=read_md('README.md'),
     keywords='Get faster RENFE Spanish Trains timetables terminal',

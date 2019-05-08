@@ -6,6 +6,15 @@
 
 # Changelog
 
+## v2.0.0 (2019-05-05)
+
+* Python lib-like refactor
+
+* Users can define custom origin and destination stations defaults. Closes [#2](https://github.com/gerardcl/renfe-cli/issues/2)
+
+* Enhanced code coverage
+
+
 ## v1.1.7 (2019-05-05)
 
 * Codecoverage: Travis CI with SonarCloud integration
