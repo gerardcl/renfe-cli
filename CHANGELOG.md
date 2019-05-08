@@ -6,7 +6,7 @@
 
 # Changelog
 
-## v2.0.0 (2019-05-05)
+## v2.0.0 (2019-05-08)
 
 * Python lib-like refactor
 
