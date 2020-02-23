@@ -29,8 +29,7 @@ setup(
         'python-dateutil<=2.8.1',
         'pytz<=2019.3',
         'six<=1.14.0',
-        'colorama<=0.4.3',
-        'certifi'
+        'colorama<=0.4.3'
     ],
     entry_points="""
         [console_scripts]
