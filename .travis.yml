@@ -28,7 +28,7 @@ matrix:
   - name: Python 3.7 on macOS
     os: osx
     osx_image: xcode10.2
-    before_install: pip3 install requests nose --upgrade
+    before_install: pip3 install --user requests nose --upgrade
     language: shell
     install: python3 setup.py install
     script: python3 -m nose
