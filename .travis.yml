@@ -38,7 +38,7 @@ matrix:
     before_install: choco install python --version=3.7.3 && pip install nose --upgrade
     env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
     install: python setup.py install
-    script: python -m nose
+    script: cd $HOME && wget --quiet https://curl.haxx.se/ca/cacert.pem && export SSL_CERT_FILE=$HOME/cacert.pem && python -m nose
 notifications:
   email:
     on_success: never
