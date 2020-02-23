@@ -28,14 +28,14 @@ matrix:
   - name: Python 3.7 on macOS
     os: osx
     osx_image: xcode10.2
-    before_install: pip3 install --user pip --upgrade && pip3 install --user requests nose --upgrade
+    before_install: pip3 install requests nose --upgrade
     language: shell
     install: python3 setup.py install
     script: python3 -m nose
   - name: Python 3.7 on Windows
     os: windows
     language: shell
-    before_install: wget https://www.renfe.com && choco install python --version=3.7.3 && pip install pip --upgrade && pip install nose --upgrade
+    before_install: wget https://www.renfe.com && choco install python --version=3.7.3 && pip install nose certifi --upgrade
     env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
     install: python setup.py install
     script: python -m nose
