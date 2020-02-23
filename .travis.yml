@@ -35,7 +35,7 @@ matrix:
   - name: Python 3.7 on Windows
     os: windows
     language: shell
-    before_install: wget -O certs.pem https://mkcert.org/generate/ && export REQUESTS_CA_BUNDLE=$PWD/certs.pem && choco install python --version=3.7.3 && pip install chardet certifi idna urllib3 requests nose --upgrade
+    before_install: cd $HOME && wget --quiet https://curl.haxx.se/ca/cacert.pem && export SSL_CERT_FILE=$HOME/cacert.pem && choco install python --version=3.7.3 && pip install chardet certifi idna urllib3 requests nose --upgrade
     env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
     install: python setup.py install
     script: python -m nose
