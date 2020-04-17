@@ -6,6 +6,15 @@
 
 # Changelog
 
+## v2.1.0 (2020-04-18)
+
+* Security fixes
+
+* Stable versioning
+
+* HTTPS calls
+
+
 ## v2.0.0 (2019-05-08)
 
 * Python lib-like refactor
