@@ -3,6 +3,7 @@ import colorama
 import logging
 import ssl
 import urllib.request
+import certifi
 
 from renfe.utils import RenfeException, RenfeHTMLParser
 
@@ -22,12 +23,12 @@ def get_time_table(origin, to, year, month, day):
     print(colorama.Fore.GREEN + "Searching timetable for date: {}-{}-{}".format(year, month, day) + colorama.Fore.RESET)
     print(colorama.Fore.GREEN + "From {} to {}".format(origin, to) + colorama.Fore.RESET)
 
-    url_timetable = 'http://horarios.renfe.com/HIRRenfeWeb/buscar.do?O={}&D={}&ID=s&AF={}&MF={}&DF={}'.format(origin, to, year, month, day)
+    url_timetable = 'https://horarios.renfe.com/HIRRenfeWeb/buscar.do?O={}&D={}&ID=s&AF={}&MF={}&DF={}'.format(origin, to, year, month, day)
 
     logging.debug(url_timetable)
 
     # get timetable
-    web = urllib.request.urlopen(url_timetable, context=ssl._create_unverified_context())
+    web = urllib.request.urlopen(url_timetable, cafile=certifi.where())
     tables = pd.read_html(web) # Returns list of all tables on page
     timetable = tables[4] # Select table of interest
     timetable = timetable.drop(timetable.columns[[4, 5, 6]], axis=1) # Remove not required columns
@@ -44,13 +45,13 @@ def search_stations_ids(search):
     import re
     print(colorama.Fore.GREEN + "Searching stations like: {}".format(search) + colorama.Fore.RESET)
 
-    url_stations = 'http://horarios.renfe.com/HIRRenfeWeb/estaciones.do?&ID=s&icid=VTodaslasEstaciones'
+    url_stations = 'https://horarios.renfe.com/HIRRenfeWeb/estaciones.do?&ID=s&icid=VTodaslasEstaciones'
 
     logging.debug(url_stations)
 
     found_any = False
 
-    web = urllib.request.urlopen(url_stations, context=ssl._create_unverified_context())
+    web = urllib.request.urlopen(url_stations, cafile=certifi.where())
     content =  web.read().decode(web.headers.get_content_charset())
     data = re.subn('', content,r'<(html).*?</\1>(?s)')[0]
 
