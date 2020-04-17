@@ -1,6 +1,9 @@
 import sys
 import colorama
 import logging
+import ssl
+import urllib.request
+
 from renfe.utils import RenfeException, RenfeHTMLParser
 
 def get_time_table(origin, to, year, month, day):
@@ -24,7 +27,8 @@ def get_time_table(origin, to, year, month, day):
     logging.debug(url_timetable)
 
     # get timetable
-    tables = pd.read_html(url_timetable) # Returns list of all tables on page
+    web = urllib.request.urlopen(url_timetable, context=ssl._create_unverified_context())
+    tables = pd.read_html(web) # Returns list of all tables on page
     timetable = tables[4] # Select table of interest
     timetable = timetable.drop(timetable.columns[[4, 5, 6]], axis=1) # Remove not required columns
     # show timetable
@@ -37,7 +41,6 @@ def get_time_table(origin, to, year, month, day):
 
 def search_stations_ids(search):
   try:
-    import urllib.request
     import re
     print(colorama.Fore.GREEN + "Searching stations like: {}".format(search) + colorama.Fore.RESET)
 
@@ -47,7 +50,7 @@ def search_stations_ids(search):
 
     found_any = False
 
-    web = urllib.request.urlopen(url_stations)
+    web = urllib.request.urlopen(url_stations, context=ssl._create_unverified_context())
     content =  web.read().decode(web.headers.get_content_charset())
     data = re.subn('', content,r'<(html).*?</\1>(?s)')[0]
 

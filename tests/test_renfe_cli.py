@@ -26,6 +26,12 @@ def test_commands():
 
 
 test_input = (
+  # search ok
+  ('-s sil', None), ('-s barc', None),
+
+  # search nook
+  ('-s 123', None),
+
   # default
   ('', None),
 
@@ -37,12 +43,6 @@ test_input = (
 
   # same as default
   ('-y {} -m {} -d {} -o 79202 -t BARCE'.format(today.year, today.month, today.day), None),
-
-  # search ok
-  ('-s sil', None), ('-s barc', None),
-
-  # search nook
-  ('-s 123', None),
 
   # wrong inputs
   ('-d notanumber', SystemExit), ('-o BARCE -t BARCE', SystemExit), ('-m 30', SystemExit)
