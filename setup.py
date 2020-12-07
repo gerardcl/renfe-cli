@@ -22,7 +22,7 @@ setup(
     py_modules=['renfe-cli'],
     include_package_data=True,
     install_requires=[
-        'setuptools<46.2.0',
+        'setuptools<51.1.0',
         'lxml<=4.5.0',
         'numpy<1.18.5',
         'pandas<1.0.4',
