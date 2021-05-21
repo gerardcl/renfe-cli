@@ -28,7 +28,7 @@ setup(
         'pandas<1.2.5',
         'python-dateutil<=2.8.1',
         'pytz<2021.2',
-        'six<=1.14.0',
+        'six<1.17.0',
         'colorama<0.4.5'
     ],
     entry_points="""
