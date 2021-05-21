@@ -4,7 +4,8 @@ import logging
 import colorama
 from datetime import date
 
-from renfe.interface import get_time_table, search_stations_ids
+from renfe.timetable import get_timetable
+from renfe.stations import get_station_by_key, station_exists, get_station_name
 from renfe.utils import RenfeException, ConfigurationMgmt
 
 
@@ -16,13 +17,11 @@ def main():
 
     # opt parser
     p = optparse.OptionParser()
-    p.add_option('--year', '-y', default=today.year, help='year selected to get the timetable from')
-    p.add_option('--month', '-m', default=today.month, help='month of the year to get the timetable from')
-    p.add_option('--day', '-d', default=today.day, help='day of the month to get the timetable from')
+    p.add_option('--days', '-d', default=0, help='number of days from today to get the timetable')
     p.add_option('--origin', '-o', default=stations.get('origin', '79202'),
                  help='from/origin ID of the train station. Use flag '
                       '\'-s <possible station name>\' in order to search for IDs')
-    p.add_option('--to', '-t', default=stations.get('to', 'BARCE'),
+    p.add_option('--to', '-t', default=stations.get('to', '71802'),
                  help='to/destination ID of the train station. Use flag '
                       '\'-s <possible station name>\' in order to search for IDs')
     p.add_option('--search', '-s', default='',
@@ -54,8 +53,19 @@ def main():
 
     # print timetable for given origin and to stations for a given date
     if options.search == '':
+        if not (station_exists(options.origin) and station_exists(options.to)):
+            logging.error(
+                "Please, provide right values for origin and destination station names")
+            exit(1)
+
         try:
-            get_time_table(options.origin, options.to, options.year, options.month, options.day)
+            times = get_timetable(get_station_name(options.origin), get_station_name(options.to), int(options.days))
+            print(colorama.Fore.GREEN + "=======================TIMETABLE======================")
+            print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<10} ".format('Train','Departure','Arrival', 'Duration'))
+            for time in times:
+                print(colorama.Fore.GREEN + "------------------------------------------------------")
+                print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<10} ".format(time[0],time[1],time[2], time[3]))
+            print(colorama.Fore.GREEN + "======================================================" + colorama.Fore.RESET)
         except RenfeException as err:
             logging.error(err)
             logging.error(
@@ -66,7 +76,7 @@ def main():
     # search into list of Station names and its Renfe identifiers
     else:
         try:
-            search_stations_ids(options.search)
+            get_station_by_key(options.search)
         except RenfeException as err:
             logging.error(err)
             logging.error(

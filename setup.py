@@ -9,7 +9,7 @@ except ImportError:
 
 setup(
     name='renfe-cli',
-    version='2.1.0',
+    version='3.0.0',
     description='Get faster RENFE Spanish Trains timetables in your terminal',
     long_description=read_md('README.md'),
     keywords='Get faster RENFE Spanish Trains timetables terminal',
@@ -23,13 +23,11 @@ setup(
     include_package_data=True,
     install_requires=[
         'setuptools<56.3.0',
-        'lxml<4.7.0',
-        'numpy<1.20.4',
-        'pandas<1.2.5',
-        'python-dateutil<=2.8.1',
-        'pytz<2021.2',
-        'six<1.17.0',
-        'colorama<0.4.5'
+        'beautifulsoup4==4.9.3',
+        'html5lib==1.1',
+        'selenium==3.141.0',
+        'webdriver-manager==3.4.2',
+        'requests==2.25.1'
     ],
     entry_points="""
         [console_scripts]
@@ -50,6 +48,6 @@ setup(
         'Topic :: Terminals',
         'Topic :: Text Processing :: Markup :: HTML',
     ],
-    tests_require=['nose'],
-    test_suite = 'nose.collector',
+    tests_require=['pytest'],
+    test_suite = 'pytest',
 )
