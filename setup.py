@@ -23,13 +23,13 @@ setup(
     include_package_data=True,
     install_requires=[
         'setuptools<46.2.0',
-        'lxml<=4.5.0',
+        'lxml<4.7.0',
         'numpy<1.18.5',
-        'pandas<1.0.4',
+        'pandas<1.2.5',
         'python-dateutil<=2.8.1',
-        'pytz<2020.2',
+        'pytz<2021.2',
         'six<=1.14.0',
-        'colorama<=0.4.3'
+        'colorama<0.4.5'
     ],
     entry_points="""
         [console_scripts]
