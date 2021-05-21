@@ -24,7 +24,7 @@ setup(
     install_requires=[
         'setuptools<56.3.0',
         'lxml<4.7.0',
-        'numpy<1.18.5',
+        'numpy<1.20.4',
         'pandas<1.2.5',
         'python-dateutil<=2.8.1',
         'pytz<2021.2',
