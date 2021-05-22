@@ -2,7 +2,7 @@
 
 # RENFE TIMETABLES CLI
 
-Get faster RENFE Spanish trains timetables in your terminal, with Python3.8+ (see [builds](https://travis-ci.org/gerardcl/renfe-cli)).
+Get faster RENFE Spanish trains timetables in your terminal, with Python3.8+.
 No longer need to open the browser! Just keep using your terminal :)
 
 See the [changelog](https://github.com/gerardcl/renfe-cli/blob/master/CHANGELOG.md).
