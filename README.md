@@ -17,8 +17,15 @@ $ pip install renfe-cli --upgrade
 
 ## Usage
 
-This CLI behaves as a person going thourgh the official renfe.com site, selecting origin and destianion stations.
-This also considers by default searching for today, or to which day to search the timetable from today's day as reference (like a click on next day).
+This CLI behaves as a person/bot going through the official renfe.com site, using selenium firefox or chrome browsers.
+
+The navigation through the site happens in the following steps:
+
+1. Types and selects origin station
+2. Types and selects destianion station
+3. Selects the day to search schedules for (by clicking on next day button as much as provided; defaults to 0, therefore today)
+4. Clicks on search button
+5. Gets and massages data found on the provided timetable
 
 ```bash
 $ renfe-cli -h
@@ -26,12 +33,16 @@ Usage: renfe-cli [options]
 
 Options:
   -h, --help            show this help message and exit
-  -d DAYS, --days=DAYS  number of days from today to get the timetable
   -o ORIGIN, --origin=ORIGIN
                         from/origin ID of the train station. Use flag '-s
                         <possible station name>' in order to search for IDs
   -t TO, --to=TO        to/destination ID of the train station. Use flag '-s
                         <possible station name>' in order to search for IDs
+  -d DAYS, --days=DAYS  number of days from today to get the timetable
+                        (default: 0 - today)
+  -b BROWSER, --browser=BROWSER
+                        possible browsers are "firefox" and "chrome" (default:
+                        firefox)
   -s SEARCH, --search=SEARCH
                         you need to get the stations IDs, searching by names;
                         in order to apply right inputs for origins and/or
@@ -71,7 +82,7 @@ $ renfe-cli
 Today is: 2021-05-22
 Searching timetable for date: 2021-5-22
 From SILS to BARCELONA-PASSEIG DE GRACIA
-...this might take some seconds depending on the Renfe site speed...
+Be patient, navigating through renfe site now...
 =======================TIMETABLE======================
  Train      | Departure  | Arrival    | Duration
 ------------------------------------------------------

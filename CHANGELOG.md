@@ -1,10 +1,16 @@
-<!--
- Copyright 2019 @gerardcl. All rights reserved.
- Use of this source code is governed by a BSD-style
- license that can be found in the LICENSE file.
--->
-
 # Changelog
+
+## v3.0.2 (2021-05-22)
+
+* Code refactor and stability improvements
+
+## v3.0.1 (2021-05-21)
+
+* Migration to GitHub Actions
+
+## v3.0.0 (2021-05-21)
+
+* Enable back the renfe-cli with new web crawling flow based on selenium
 
 ## v2.1.0 (2020-04-18)
 

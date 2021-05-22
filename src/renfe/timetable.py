@@ -1,21 +1,17 @@
 import os
-import colorama
 from datetime import datetime, timedelta
-from typing import List, Set
+from typing import List, Set, Union
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from webdriver_manager.firefox import GeckoDriverManager
+from time import sleep
+from selenium.webdriver.firefox.webdriver import WebDriver as Firefox
+from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
 
 os.environ['WDM_LOG_LEVEL'] = '0'
 
 
-def get_timetable(origin: str, destination: str, days_from_today: int = 0) -> List[Set]:
-    print(colorama.Fore.GREEN + f"Searching timetable for date: {get_date(days_from_today)}")
-    print(colorama.Fore.GREEN + "From {} to {}".format(origin, destination) + colorama.Fore.RESET)
-    print(colorama.Fore.GREEN + "...this might take some seconds \
-depending on the Renfe site speed..." + colorama.Fore.RESET)
-
-    soup = get_soup(origin, destination, days_from_today)
+def get_timetable(origin: str, destination: str, days_from_today: int = 0, browser: str = "firefox") -> List[Set]:
+    soup = get_soup(browser, origin, destination, days_from_today)
     types = get_types(soup)
     durations = get_durations(soup)
     departures = get_departures(soup)
@@ -24,22 +20,45 @@ depending on the Renfe site speed..." + colorama.Fore.RESET)
     return list(zip(types, departures, arrivals, durations))
 
 
-def get_soup(origin: str, destination: str, days_from_today: int) -> BeautifulSoup:
-    firefox_options = webdriver.FirefoxOptions()
-    firefox_options.set_headless()
-    browser = webdriver.Firefox(executable_path=GeckoDriverManager().install(), firefox_options=firefox_options)
+def get_browser(type: str) -> Union[Firefox, Chrome]:
+    global browser
+    if type == "firefox":
+        from webdriver_manager.firefox import GeckoDriverManager
+        firefox_options = webdriver.FirefoxOptions()
+        firefox_options.set_headless()
+        browser = webdriver.Firefox(executable_path=GeckoDriverManager().install(), firefox_options=firefox_options)
+        browser.implicitly_wait(10)  # wait up to 10 seconds while trying to locate elements
+    else:  # chrome
+        from webdriver_manager.chrome import ChromeDriverManager
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.set_headless()
+        browser = webdriver.Chrome(executable_path=ChromeDriverManager().install(), chrome_options=chrome_options)
     browser.implicitly_wait(10)  # wait up to 10 seconds while trying to locate elements
+
+    return browser
+
+
+def get_soup(browser: str, origin: str, destination: str, days_from_today: int) -> BeautifulSoup:
+    browser = get_browser(browser)
     browser.get("https://www.renfe.com/es/es")
+
+    sleep(1)
 
     origin_input = browser.find_element_by_css_selector("rf-awesomplete.rf-input-autocomplete:nth-child(1) \
 > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
     origin_input.send_keys(origin)
+
+    sleep(0.5)
+
     origin_option = browser.find_element_by_css_selector("#awesomplete_list_1_item_0")
     origin_option.click()
 
     destination_input = browser.find_element_by_css_selector("rf-awesomplete.rf-input-autocomplete:nth-child(2) \
 > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
     destination_input.send_keys(destination)
+
+    sleep(0.5)
+
     destination_option = browser.find_element_by_css_selector("#awesomplete_list_2_item_0")
     destination_option.click()
 
@@ -50,8 +69,12 @@ def get_soup(origin: str, destination: str, days_from_today: int) -> BeautifulSo
         days_from_today = days_from_today - 1
         time.click()
 
-    search_button = browser.find_element_by_css_selector("rf-button.rf-button")
+    search_button = browser.find_element_by_css_selector("#contentPage > div > div > div:nth-child(1) > div > div \
+> div > div > div > div > rf-header > rf-header-top > div.rf-header__wrap-search.grid > rf-search \
+> div > div.rf-search__filters.rf-search__filters--open > div.rf-search__wrapper-button > div.rf-search__button")
     search_button.click()
+
+    sleep(1)
 
     soup = BeautifulSoup(browser.page_source, 'html.parser')
 

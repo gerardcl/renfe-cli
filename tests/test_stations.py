@@ -22,7 +22,7 @@
 #     # ('-d notanumber', SystemExit), ('-o BARCE -t BARCE', SystemExit), ('-d -1', SystemExit)
 # )
 import pytest
-from renfe.stations import get_stations, get_station_name, station_exists
+from renfe.stations import get_stations, get_station_name, station_exists, get_station_and_key
 from renfe.utils import RenfeException
 
 def test_renfe_cli_should_get_list_of_stations_objects():
@@ -53,3 +53,15 @@ def test_renfe_cli_should_return_false_when_station_by_id_not_found():
     exists = station_exists("123")
 
     assert exists == False
+
+
+def test_renfe_cli_should_return_stations_infos_when_key_is_found():
+    stations_infos = get_station_and_key("sil")
+
+    assert len(stations_infos) > 0
+
+
+def test_renfe_cli_should_return_empty_when_station_by_id_not_found():
+    stations_infos = get_station_and_key("123")
+
+    assert len(stations_infos) == 0
