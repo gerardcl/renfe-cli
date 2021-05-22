@@ -1,9 +1,9 @@
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gerardcl_renfe-cli&metric=alert_status)](https://sonarcloud.io/dashboard?id=gerardcl_renfe-cli)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gerardcl_renfe-cli&metric=alert_status)](https://sonarcloud.io/dashboard?id=gerardcl_renfe-cli) [![Build Python Package](https://github.com/gerardcl/renfe-cli/actions/workflows/python-package.yml/badge.svg)](https://github.com/gerardcl/renfe-cli/actions/workflows/python-package.yml)
 
 RENFE TIMETABLES CLI
 ====================
 
-Get faster RENFE Spanish trains timetables in your terminal. Works on Linux, OSX and Windows Python3 (see [builds](https://travis-ci.org/gerardcl/renfe-cli)).
+Get faster RENFE Spanish trains timetables in your terminal. Works on Linux, OSX and Windows Python3 (see [builds](https://github.com/gerardcl/renfe-cli/actions/workflows/python-package.yml)).
 
 See the [changelog](https://github.com/gerardcl/renfe-cli/blob/master/CHANGELOG.md).
 
