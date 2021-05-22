@@ -53,7 +53,7 @@ class ConfigurationMgmt():
             raise RenfeException("Cannot search timetables if both origin and destiantion are the same")
         try:
             int(options.days)
-            if options.days < 0:
+            if int(options.days) < 0:
                 raise ValueError("Only today or future days can be searched...")
         except ValueError:
             logging.debug(sys.exc_info())

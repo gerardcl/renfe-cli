@@ -12,7 +12,8 @@ os.environ['WDM_LOG_LEVEL'] = '0'
 def get_timetable(origin: str, destination: str, days_from_today: int = 0) -> List[Set]:
     print(colorama.Fore.GREEN + f"Searching timetable for date: {get_date(days_from_today)}")
     print(colorama.Fore.GREEN + "From {} to {}".format(origin, destination) + colorama.Fore.RESET)
-    print(colorama.Fore.GREEN + "...this might take some seconds depending on the Renfe site speed..." + colorama.Fore.RESET)
+    print(colorama.Fore.GREEN + "...this might take some seconds \
+depending on the Renfe site speed..." + colorama.Fore.RESET)
 
     soup = get_soup(origin, destination, days_from_today)
     types = get_types(soup)
@@ -20,26 +21,31 @@ def get_timetable(origin: str, destination: str, days_from_today: int = 0) -> Li
     departures = get_departures(soup)
     arrivals = get_arrivals(soup)
 
-    return list(zip(types,departures,arrivals,durations))
+    return list(zip(types, departures, arrivals, durations))
+
 
 def get_soup(origin: str, destination: str, days_from_today: int) -> BeautifulSoup:
     firefox_options = webdriver.FirefoxOptions()
     firefox_options.set_headless()
     browser = webdriver.Firefox(executable_path=GeckoDriverManager().install(), firefox_options=firefox_options)
-    browser.implicitly_wait(10) # wait up to 10 seconds while trying to locate elements
+    browser.implicitly_wait(10)  # wait up to 10 seconds while trying to locate elements
     browser.get("https://www.renfe.com/es/es")
 
-    origin_input = browser.find_element_by_css_selector("rf-awesomplete.rf-input-autocomplete:nth-child(1) > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
+    origin_input = browser.find_element_by_css_selector("rf-awesomplete.rf-input-autocomplete:nth-child(1) \
+> div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
     origin_input.send_keys(origin)
     origin_option = browser.find_element_by_css_selector("#awesomplete_list_1_item_0")
     origin_option.click()
 
-    destination_input = browser.find_element_by_css_selector("rf-awesomplete.rf-input-autocomplete:nth-child(2) > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
+    destination_input = browser.find_element_by_css_selector("rf-awesomplete.rf-input-autocomplete:nth-child(2) \
+> div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
     destination_input.send_keys(destination)
     destination_option = browser.find_element_by_css_selector("#awesomplete_list_2_item_0")
     destination_option.click()
-    
-    time = browser.find_element_by_css_selector("div.rf-daterange__container-ipt:nth-child(2) > div:nth-child(2) > button:nth-child(2) > i:nth-child(1)")
+
+    time = browser.find_element_by_css_selector("div.rf-daterange__container-ipt:nth-child(2) > div:nth-child(2) \
+> button:nth-child(2) > i:nth-child(1)")
+
     while days_from_today > 0:
         days_from_today = days_from_today - 1
         time.click()
@@ -48,7 +54,7 @@ def get_soup(origin: str, destination: str, days_from_today: int) -> BeautifulSo
     search_button.click()
 
     soup = BeautifulSoup(browser.page_source, 'html.parser')
-    
+
     browser.quit()
 
     return soup
@@ -64,6 +70,7 @@ def get_departures(soup) -> List[str]:
         result.append(departure.text.strip())
     return result
 
+
 def get_arrivals(soup) -> List[str]:
     result = []
     attrs_arrival = {
@@ -73,6 +80,7 @@ def get_arrivals(soup) -> List[str]:
     for arrival in arrivals:
         result.append(arrival.text.strip())
     return result
+
 
 def get_durations(soup) -> List[str]:
     result = []
@@ -84,6 +92,7 @@ def get_durations(soup) -> List[str]:
     for duration in durations:
         result.append(duration.text.strip())
     return result
+
 
 def get_types(soup) -> List[str]:
     result = []
@@ -104,6 +113,7 @@ def get_types(soup) -> List[str]:
     for t in types:
         result.append(t.text.strip())
     return result
+
 
 def get_date(days_from_today: int) -> str:
     day = datetime.today() + timedelta(days=days_from_today)

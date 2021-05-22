@@ -61,10 +61,12 @@ def main():
         try:
             times = get_timetable(get_station_name(options.origin), get_station_name(options.to), int(options.days))
             print(colorama.Fore.GREEN + "=======================TIMETABLE======================")
-            print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<10} ".format('Train','Departure','Arrival', 'Duration'))
+            print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<10} ".format(
+                'Train', 'Departure', 'Arrival', 'Duration'))
             for time in times:
                 print(colorama.Fore.GREEN + "------------------------------------------------------")
-                print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<10} ".format(time[0],time[1],time[2], time[3]))
+                print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<10} ".format(
+                    time[0], time[1], time[2], time[3]))
             print(colorama.Fore.GREEN + "======================================================" + colorama.Fore.RESET)
         except RenfeException as err:
             logging.error(err)
