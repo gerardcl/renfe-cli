@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.0.3 (2021-05-24)
+
+* Security improvements - CodeQL added
+
 ## v3.0.2 (2021-05-22)
 
 * Code refactor and stability improvements

@@ -1,4 +1,4 @@
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gerardcl_renfe-cli&metric=alert_status)](https://sonarcloud.io/dashboard?id=gerardcl_renfe-cli) [![Build Python Package](https://github.com/gerardcl/renfe-cli/actions/workflows/python-package.yml/badge.svg)](https://github.com/gerardcl/renfe-cli/actions/workflows/python-package.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gerardcl_renfe-cli&metric=alert_status)](https://sonarcloud.io/dashboard?id=gerardcl_renfe-cli) [![Python Build](https://github.com/gerardcl/renfe-cli/actions/workflows/python-package.yml/badge.svg)](https://github.com/gerardcl/renfe-cli/actions/workflows/python-package.yml) [![CodeQL Analysis](https://github.com/gerardcl/renfe-cli/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/gerardcl/renfe-cli/actions/workflows/codeql-analysis.yml)
 
 # RENFE TIMETABLES CLI
 
