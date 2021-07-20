@@ -22,7 +22,7 @@ setup(
     py_modules=['renfe-cli'],
     include_package_data=True,
     install_requires=[
-        'setuptools<57.2.0',
+        'setuptools<57.5.0',
         'beautifulsoup4==4.9.3',
         'html5lib==1.1',
         'selenium==3.141.0',
