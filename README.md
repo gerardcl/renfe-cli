@@ -21,10 +21,10 @@ This CLI behaves as a person/bot going through the official renfe.com site, usin
 
 The navigation through the site happens in the following steps:
 
-1. Types and selects origin station
-2. Types and selects destianion station
+1. Writes down and selects origin station
+2. Writes down and selects destination station
 3. Selects the day to search schedules for (by clicking on next day button as much as provided; defaults to 0, therefore today)
-4. Clicks on search button
+4. Clicks on search button (waits for results to load 3 seconds by default)
 5. Gets and massages data found on the provided timetable
 
 ```bash
@@ -47,6 +47,8 @@ Options:
                         you need to get the stations IDs, searching by names;
                         in order to apply right inputs for origins and/or
                         destinations
+  -e SEARCH_TIMEOUT, --search-timeout=SEARCH_TIMEOUT
+                        search timeout in seconds (default to 3 seconds)
   -l LOGGING_LEVEL, --logging-level=LOGGING_LEVEL
                         logging level defaults to warning and possible values
                         are: debug, info, warning, error and critical

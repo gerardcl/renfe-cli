@@ -10,8 +10,8 @@ from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
 os.environ['WDM_LOG_LEVEL'] = '0'
 
 
-def get_timetable(origin: str, destination: str, days_from_today: int = 0, browser: str = "firefox") -> List[Set]:
-    soup = get_soup(browser, origin, destination, days_from_today)
+def get_timetable(origin: str, destination: str, days_from_today: int = 0, browser: str = "firefox", search_timeout: int = 3) -> List[Set]:
+    soup = get_soup(browser, origin, destination, days_from_today, search_timeout)
     types = get_types(soup)
     durations = get_durations(soup)
     departures = get_departures(soup)
@@ -38,7 +38,7 @@ def get_browser(type: str) -> Union[Firefox, Chrome]:
     return browser
 
 
-def get_soup(browser: str, origin: str, destination: str, days_from_today: int) -> BeautifulSoup:
+def get_soup(browser: str, origin: str, destination: str, days_from_today: int, search_timeout: int) -> BeautifulSoup:
     browser = get_browser(browser)
     browser.get("https://www.renfe.com/es/es")
 
@@ -48,7 +48,7 @@ def get_soup(browser: str, origin: str, destination: str, days_from_today: int) 
 > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
     origin_input.send_keys(origin)
 
-    sleep(0.5)
+    sleep(0.05)
 
     origin_option = browser.find_element_by_css_selector("#awesomplete_list_1_item_0")
     origin_option.click()
@@ -57,7 +57,7 @@ def get_soup(browser: str, origin: str, destination: str, days_from_today: int) 
 > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
     destination_input.send_keys(destination)
 
-    sleep(0.5)
+    sleep(0.05)
 
     destination_option = browser.find_element_by_css_selector("#awesomplete_list_2_item_0")
     destination_option.click()
@@ -74,7 +74,7 @@ def get_soup(browser: str, origin: str, destination: str, days_from_today: int) 
 > div > div.rf-search__filters.rf-search__filters--open > div.rf-search__wrapper-button > div.rf-search__button")
     search_button.click()
 
-    sleep(1)
+    sleep(search_timeout)
 
     soup = BeautifulSoup(browser.page_source, 'html.parser')
 
