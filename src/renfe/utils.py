@@ -89,6 +89,8 @@ def parse_args(config):
     p.add_option('--search', '-s', default='',
                  help='you need to get the stations IDs, searching by names; '
                       'in order to apply right inputs for origins and/or destinations')
+    p.add_option('--search-timeout', '-e', default=3,
+                 help='search timeout in seconds (default to 3 seconds)')
     p.add_option('--logging-level', '-l',
                  help='logging level defaults to warning and possible values are:'
                       ' debug, info, warning, error and critical')

@@ -1,5 +1,9 @@
 # Changelog
 
+## v3.1.0 (2021-09-13)
+
+* Expose search timeout as a CLI flag and default to 3 seconds.
+
 ## v3.0.3 (2021-05-24)
 
 * Security improvements - CodeQL added
