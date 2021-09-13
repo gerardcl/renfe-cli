@@ -23,7 +23,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'setuptools<58.1.0',
-        'beautifulsoup4==4.9.3',
+        'beautifulsoup4==4.10.0',
         'html5lib==1.1',
         'selenium==3.141.0',
         'webdriver-manager==3.4.2',
