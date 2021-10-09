@@ -1,4 +1,5 @@
 import os
+import re
 from datetime import datetime, timedelta
 from typing import List, Set, Union
 from bs4 import BeautifulSoup
@@ -16,8 +17,9 @@ def get_timetable(origin: str, destination: str, days_from_today: int = 0, brows
     durations = get_durations(soup)
     departures = get_departures(soup)
     arrivals = get_arrivals(soup)
+    prices = get_prices(soup)
 
-    return list(zip(types, departures, arrivals, durations))
+    return list(zip(types, departures, arrivals, durations, prices))
 
 
 def get_browser(type: str) -> Union[Firefox, Chrome]:
@@ -141,3 +143,17 @@ def get_types(soup) -> List[str]:
 def get_date(days_from_today: int) -> str:
     day = datetime.today() + timedelta(days=days_from_today)
     return f"{day.year}-{day.month}-{day.day}"
+
+def get_prices(soup) -> List[str]:
+    prices = []
+    attrs_trip = {"class": re.compile("trayectoRow\w*")}
+    trips = soup.find_all("tr", attrs=attrs_trip)
+    for trip in trips:
+        attrs_price = {"class":"precio booking-list-element-big-font"}
+        price = trip.find_all("div", attrs=attrs_price)
+        if len(price)>1:
+            price = " - ".join([p.string for p in price])
+        else:
+            price = price[0].string
+        prices.append(price)
+    return prices
