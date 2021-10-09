@@ -31,15 +31,15 @@ def main():
             print(colorama.Fore.GREEN + f"From {origin_name} to {destination_name}" + colorama.Fore.RESET)
             print(colorama.Fore.GREEN + "Be patient, navigating through renfe site now..." + colorama.Fore.RESET)
             times = get_timetable(origin_name, destination_name, int(options.days), options.browser, int(options.search_timeout))
-            print(colorama.Fore.GREEN + "=======================TIMETABLE======================")
-            print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<10} ".format(
-                'Train', 'Departure', 'Arrival', 'Duration'))
+            print(colorama.Fore.GREEN + "=================================TIMETABLE================================")
+            print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<12} | {:<10} ".format(
+                'Train', 'Departure', 'Arrival', 'Duration', 'Prices'))
 
             for time in times:
-                print(colorama.Fore.GREEN + "------------------------------------------------------")
-                print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<10} ".format(
-                    time[0], time[1], time[2], time[3]))
-            print(colorama.Fore.GREEN + "======================================================" + colorama.Fore.RESET)
+                print(colorama.Fore.GREEN + "--------------------------------------------------------------------------")
+                print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<12} | {:<10} ".format(
+                    time[0], time[1], time[2], time[3], time[4]))
+            print(colorama.Fore.GREEN + "==========================================================================" + colorama.Fore.RESET)
 
             if not times:
                print(colorama.Fore.YELLOW + "Timetable was empty. Maybe no more trains for today? Also, try increasing search timeout (-e flag, see help). Please, open an issue if problem does persist." + colorama.Fore.RESET)
