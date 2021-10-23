@@ -30,7 +30,12 @@ def main():
             print(colorama.Fore.GREEN + f"Searching timetable for date: {get_date(int(options.days))}")
             print(colorama.Fore.GREEN + f"From {origin_name} to {destination_name}" + colorama.Fore.RESET)
             print(colorama.Fore.GREEN + "Be patient, navigating through renfe site now..." + colorama.Fore.RESET)
-            times = get_timetable(origin_name, destination_name, int(options.days), options.browser, int(options.search_timeout))
+            times = get_timetable(
+                origin_name,
+                destination_name,
+                int(options.days),
+                options.browser,
+                int(options.search_timeout))
             print(colorama.Fore.GREEN + "=======================TIMETABLE======================")
             print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<10} ".format(
                 'Train', 'Departure', 'Arrival', 'Duration'))
@@ -42,7 +47,10 @@ def main():
             print(colorama.Fore.GREEN + "======================================================" + colorama.Fore.RESET)
 
             if not times:
-               print(colorama.Fore.YELLOW + "Timetable was empty. Maybe no more trains for today? Also, try increasing search timeout (-e flag, see help). Please, open an issue if problem does persist." + colorama.Fore.RESET)
+                print(colorama.Fore.YELLOW + "Timetable was empty. \
+                    Maybe no more trains for today? \
+                    Also, try increasing search timeout (-e flag, see help). \
+                    Please, open an issue if problem does persist." + colorama.Fore.RESET)
 
         except (RenfeException, ValueError) as err:
             logging.error(err)

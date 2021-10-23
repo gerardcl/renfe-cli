@@ -10,7 +10,12 @@ from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
 os.environ['WDM_LOG_LEVEL'] = '0'
 
 
-def get_timetable(origin: str, destination: str, days_from_today: int = 0, browser: str = "firefox", search_timeout: int = 3) -> List[Set]:
+def get_timetable(
+        origin: str,
+        destination: str,
+        days_from_today: int = 0,
+        browser: str = "firefox",
+        search_timeout: int = 3) -> List[Set]:
     soup = get_soup(browser, origin, destination, days_from_today, search_timeout)
     types = get_types(soup)
     durations = get_durations(soup)
