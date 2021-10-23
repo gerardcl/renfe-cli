@@ -40,4 +40,6 @@ jobs:
         flake8 src --count --exit-zero --max-complexity=11 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        PYTHONPATH=src python -m pytest --junitxml=tests.xml -o junit_family=xunit2 --cov-report term-missing --cov-report xml --cov=src -o testpaths=tests
+        python -m pytest --junitxml=tests.xml -o junit_family=xunit2 --cov-report term-missing --cov-report xml --cov=src -o testpaths=tests
+      env:
+        PYTHONPATH: "src"
