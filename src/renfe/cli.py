@@ -44,7 +44,7 @@ def main():
             if not times:
                print(colorama.Fore.YELLOW + "Timetable was empty. Maybe no more trains for today? Also, try increasing search timeout (-e flag, see help). Please, open an issue if problem does persist." + colorama.Fore.RESET)
 
-        except RenfeException as err:
+        except (RenfeException, ValueError) as err:
             logging.error(err)
             logging.error(
                 "No timetables found... Check your inputs and enable debug. If the problem persists,"
