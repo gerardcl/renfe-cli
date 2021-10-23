@@ -10,7 +10,12 @@ from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
 os.environ['WDM_LOG_LEVEL'] = '0'
 
 
-def get_timetable(origin: str, destination: str, days_from_today: int = 0, browser: str = "firefox", search_timeout: int = 3) -> List[Set]:
+def get_timetable(
+        origin: str,
+        destination: str,
+        days_from_today: int = 0,
+        browser: str = "firefox",
+        search_timeout: int = 3) -> List[Set]:
     soup = get_soup(browser, origin, destination, days_from_today, search_timeout)
     types = get_types(soup)
     durations = get_durations(soup)
@@ -22,18 +27,24 @@ def get_timetable(origin: str, destination: str, days_from_today: int = 0, brows
 
 def get_browser(type: str) -> Union[Firefox, Chrome]:
     global browser
-    if type == "firefox":
-        from webdriver_manager.firefox import GeckoDriverManager
-        firefox_options = webdriver.FirefoxOptions()
-        firefox_options.set_headless()
-        browser = webdriver.Firefox(executable_path=GeckoDriverManager().install(), firefox_options=firefox_options)
+    try:
+        if type == "firefox":
+            from webdriver_manager.firefox import GeckoDriverManager
+            from selenium.webdriver.firefox.options import Options
+            firefox_options = Options()
+            firefox_options.add_argument("--headless")
+            browser = webdriver.Firefox(executable_path=GeckoDriverManager().install(), options=firefox_options)
+        else:  # chrome
+            from webdriver_manager.chrome import ChromeDriverManager
+            from selenium.webdriver.chrome.options import Options
+            chrome_options = Options()
+            chrome_options.add_argument("--headless")
+            browser = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=chrome_options)
+
         browser.implicitly_wait(10)  # wait up to 10 seconds while trying to locate elements
-    else:  # chrome
-        from webdriver_manager.chrome import ChromeDriverManager
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.set_headless()
-        browser = webdriver.Chrome(executable_path=ChromeDriverManager().install(), chrome_options=chrome_options)
-    browser.implicitly_wait(10)  # wait up to 10 seconds while trying to locate elements
+
+    except ValueError as ex:
+        raise ex
 
     return browser
 
