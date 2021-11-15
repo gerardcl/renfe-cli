@@ -23,7 +23,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'setuptools-rust==0.12.1',
-        'setuptools==58.3.0',
+        'setuptools==59.1.0',
         'beautifulsoup4==4.10.0',
         'html5lib==1.1',
         'selenium==4.0.0',
