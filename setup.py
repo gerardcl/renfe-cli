@@ -26,7 +26,7 @@ setup(
         'setuptools==58.3.0',
         'beautifulsoup4==4.10.0',
         'html5lib==1.1',
-        'selenium==4.0.0',
+        'selenium==4.1.0',
         'webdriver-manager==3.5.1',
         'requests==2.26.0'
     ],
