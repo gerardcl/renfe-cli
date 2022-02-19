@@ -1,5 +1,10 @@
 # Changelog
 
+
+## v3.3.0 (2022-02-19)
+
+* Bump of dependency versions - no breaking changes
+
 ## v3.2.0 (2021-10-23)
 
 * Upgrade to Selenium 4
