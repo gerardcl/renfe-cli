@@ -2,6 +2,8 @@
 
 # RENFE TIMETABLES CLI
 
+**NOTE** since I am using more often Rodalies trains I have created [rodalies-cli](https://github.com/gerardcl/rodalies-cli). I hope you like it!
+
 Get faster RENFE Spanish trains timetables in your terminal, with Python3.8+.
 No longer need to open the browser! Just keep using your terminal :)
 
