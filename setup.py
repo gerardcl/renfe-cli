@@ -27,7 +27,7 @@ setup(
         'beautifulsoup4==4.10.0',
         'html5lib==1.1',
         'selenium==4.1.0',
-        'webdriver-manager==3.5.3',
+        'webdriver-manager==3.8.2',
         'requests==2.27.1'
     ],
     entry_points="""
