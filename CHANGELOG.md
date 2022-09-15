@@ -1,5 +1,16 @@
 # Changelog
 
+
+## v3.3.0 (2022-02-19)
+
+* Bump of dependency versions - no breaking changes
+
+## v3.2.0 (2021-10-23)
+
+* Upgrade to Selenium 4
+* Cryptography depends on Rust
+* Fixes [#83](https://github.com/gerardcl/renfe-cli/issues/83)
+
 ## v3.1.0 (2021-09-13)
 
 * Expose search timeout as a CLI flag and default to 3 seconds.
