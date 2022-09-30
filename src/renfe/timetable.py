@@ -7,6 +7,7 @@ from selenium import webdriver
 from time import sleep
 from selenium.webdriver.firefox.webdriver import WebDriver as Firefox
 from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
+from selenium.common.exceptions import NoSuchElementException
 
 os.environ['WDM_LOG_LEVEL'] = '0'
 
@@ -56,6 +57,12 @@ def get_soup(browser: str, origin: str, destination: str, days_from_today: int, 
     browser.get("https://www.renfe.com/es/es")
 
     sleep(1)
+
+    # NOTE: temporal solution to avoid popup window
+    try:
+        browser.find_element_by_css_selector("i.rf-ico.icon-close.sc-rf-modal-score").click()
+    except NoSuchElementException:
+        pass
 
     origin_input = browser.find_element_by_css_selector("rf-awesomplete.rf-input-autocomplete:nth-child(1) \
 > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
@@ -154,6 +161,7 @@ def get_types(soup) -> List[str]:
 def get_date(days_from_today: int) -> str:
     day = datetime.today() + timedelta(days=days_from_today)
     return f"{day.year}-{day.month}-{day.day}"
+
 
 def get_prices(soup) -> List[str]:
     prices = []
