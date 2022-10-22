@@ -1,4 +1,5 @@
 import os
+import re
 from datetime import datetime, timedelta
 from typing import List, Set, Union
 from bs4 import BeautifulSoup
@@ -6,6 +7,7 @@ from selenium import webdriver
 from time import sleep
 from selenium.webdriver.firefox.webdriver import WebDriver as Firefox
 from selenium.webdriver.chrome.webdriver import WebDriver as Chrome
+from selenium.common.exceptions import NoSuchElementException
 
 os.environ['WDM_LOG_LEVEL'] = '0'
 
@@ -21,8 +23,9 @@ def get_timetable(
     durations = get_durations(soup)
     departures = get_departures(soup)
     arrivals = get_arrivals(soup)
+    prices = get_prices(soup)
 
-    return list(zip(types, departures, arrivals, durations))
+    return list(zip(types, departures, arrivals, durations, prices))
 
 
 def get_browser(type: str) -> Union[Firefox, Chrome]:
@@ -54,6 +57,12 @@ def get_soup(browser: str, origin: str, destination: str, days_from_today: int, 
     browser.get("https://www.renfe.com/es/es")
 
     sleep(1)
+
+    # NOTE: temporal solution to avoid popup window
+    try:
+        browser.find_element_by_css_selector("i.rf-ico.icon-close.sc-rf-modal-score").click()
+    except NoSuchElementException:
+        pass
 
     origin_input = browser.find_element_by_css_selector("rf-awesomplete.rf-input-autocomplete:nth-child(1) \
 > div:nth-child(1) > div:nth-child(2) > input:nth-child(1)")
@@ -152,3 +161,21 @@ def get_types(soup) -> List[str]:
 def get_date(days_from_today: int) -> str:
     day = datetime.today() + timedelta(days=days_from_today)
     return f"{day.year}-{day.month}-{day.day}"
+
+
+def get_prices(soup) -> List[str]:
+    prices = []
+    attrs_trip = {"class": re.compile("trayectoRow\w*")}
+    trips = soup.find_all("tr", attrs=attrs_trip)
+    for trip in trips:
+        attrs_price = {"class":"precio booking-list-element-big-font"}
+        price = trip.find_all("div", attrs=attrs_price)
+        if len(price)>1:
+            price = " - ".join([p.get_text() for p in price])
+        elif len(price)==1:
+            price = price[0].get_text()
+        else:
+            attrs_train_status = {"class": re.compile("booking-list-element-price\w*")}
+            price = trip.find_all("td", attrs=attrs_train_status)[0].get_text().strip("\n").strip()
+        prices.append(price)
+    return prices

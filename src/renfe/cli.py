@@ -41,10 +41,10 @@ def main():
                 'Train', 'Departure', 'Arrival', 'Duration'))
 
             for time in times:
-                print(colorama.Fore.GREEN + "------------------------------------------------------")
-                print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<10} ".format(
-                    time[0], time[1], time[2], time[3]))
-            print(colorama.Fore.GREEN + "======================================================" + colorama.Fore.RESET)
+                print(colorama.Fore.GREEN + "--------------------------------------------------------------------------")
+                print(colorama.Fore.GREEN + " {:<10} | {:<10} | {:<10} | {:<12} | {:<10} ".format(
+                    time[0], time[1], time[2], time[3], time[4]))
+            print(colorama.Fore.GREEN + "==========================================================================" + colorama.Fore.RESET)
 
             if not times:
                 print(colorama.Fore.YELLOW + "Timetable was empty. \
