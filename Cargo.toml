@@ -10,8 +10,8 @@ crate-type = ["cdylib"]
 
 [dependencies]
 pyo3 = { version = "0.20", features = ["abi3-py37"] }
-anyhow = "1.0"
 headless_chrome = { version = "1.0", features = ["fetch"] }
 image = "0.24"
 viuer = "0.7"
 scraper = "0.18"
+ureq = "2.9"

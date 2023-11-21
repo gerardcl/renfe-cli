@@ -1,15 +1,11 @@
 use pyo3::prelude::*;
 
-use std::error::Error;
-use std::fs;
 use std::time::Duration;
-use anyhow::Result;
 use scraper::{Html, Selector, ElementRef};
-use viuer::{Config, print};
 use headless_chrome::{Browser, LaunchOptions};
-use headless_chrome::protocol::cdp::Page;
-use image;
 
+mod stations;
+use stations::load_stations;
 
 #[pyfunction]
 fn browse_renfe() {
@@ -150,6 +146,7 @@ impl VecParser for ElementRef<'_> {
 #[pymodule]
 fn renfe_cli(_py: Python, m: &PyModule) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(browse_renfe, m)?)?;
+    m.add_function(wrap_pyfunction!(load_stations, m)?)?;
 
     Ok(())
 }
