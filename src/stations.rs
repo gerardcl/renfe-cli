@@ -1,5 +1,5 @@
 use pyo3::pyfunction;
-use scraper::{Selector, Html};
+use scraper::{Html, Selector};
 
 #[pyfunction]
 pub fn load_stations() -> Vec<String> {
@@ -14,7 +14,8 @@ pub fn load_stations() -> Vec<String> {
 
     let stations: Vec<String> = parsed_html
         .select(selector)
-        .flat_map(|el| el.text()).map(|t| t.to_string())
+        .flat_map(|el| el.text())
+        .map(|t| t.to_string())
         .collect();
 
     stations[1..].to_vec()
