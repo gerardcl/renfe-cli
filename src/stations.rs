@@ -1,8 +1,9 @@
-use pyo3::pyfunction;
+use pyo3::{pyclass, pyfunction, pymethods, PyResult};
 use scraper::{Html, Selector};
 
 #[pyfunction]
 pub fn load_stations() -> Vec<String> {
+    println!("loading stations from Renfe web");
     let response = match ureq::get("https://www.renfe.com/content/renfe/es/en/viajar/informacion-util/horarios/app-horarios.html").call() {
         Ok(response) => { response },
         Err(_) => { panic!("something wrong") }
@@ -19,4 +20,28 @@ pub fn load_stations() -> Vec<String> {
         .collect();
 
     stations[1..].to_vec()
+}
+
+#[pyclass]
+pub struct Renfe {
+    stations: Vec<String>,
+}
+
+#[pymethods]
+impl Renfe {
+    #[new]
+    pub fn new() -> PyResult<Self> {
+        Ok(Renfe {
+            stations: load_stations(),
+        })
+    }
+
+    fn check(&self, station: String) -> PyResult<Vec<&String>> {
+        let found: Vec<&String> = self
+            .stations
+            .iter()
+            .filter(|s| s.contains(&station))
+            .collect();
+        Ok(found)
+    }
 }
