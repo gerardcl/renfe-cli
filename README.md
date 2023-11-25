@@ -41,10 +41,11 @@ Usage: renfe-cli [options]
 Options:
     -f ORIGIN           Set From origin station
     -t DESTINATION      Set To destination station
-    -d, --day DAY       Set Day to search timetable for
-    -m, --month MONTH   Set Month to search timetable for
-    -y, --year YEAR     Set Year to search timetable for
-    -h, --help          print this help menu
+    -d, --day DAY       Set Day to search timetable for (default: today)
+    -m, --month MONTH   Set Month to search timetable for (default: today's month)
+    -y, --year YEAR     Set Year to search timetable for (default: today's year)
+    -w, --wait SECONDS  Set Wait time in seconds for Renfe search result page (default: 2)
+    -h, --help          Print this help menu
 ```
 
 ### **Getting the timetable**
@@ -52,7 +53,9 @@ Options:
 In this new major release there is still no interactive mode nor defaults; one must provide all inputs, like:
 
 ```bash
-$ renfe-cli -f Tarr -t Mad -d 27 -m 11 -y 2023
+$ renfe-cli -f Barce -t Mad -d30
+Today is: 2023-11-25
+Searching timetable for date: 2023-11-30
 loading headless chrome browser
 navigating to renfe timetable search page
 waiting for search page
@@ -67,40 +70,110 @@ loading timetable
 =========================TIMETABLE=========================
 Train        |   Departure  |   Arrival    | Duration
 -----------------------------------------------------------
-AVE          |    06.25     |    09.10     | 2 h. 45 min.
+AVE          |    05.50     |    09.10     | 3 h. 20 min.
 -----------------------------------------------------------
-LD-AVE       |    08.22     |    15.35     | 7 h. 13 min.
+AVE          |    06.20     |    08.50     | 2 h. 30 min.
 -----------------------------------------------------------
-AVE          |    08.34     |    11.12     | 2 h. 38 min.
+AVLO         |    06.35     |    09.20     | 2 h. 45 min.
 -----------------------------------------------------------
-REG.EXP.     |    10.11     |    18.09     | 7 h. 58 min.
+AVE          |    07.00     |    09.30     | 2 h. 30 min.
 -----------------------------------------------------------
-AVLO         |    10.34     |    13.17     | 2 h. 43 min.
+AVE          |    07.40     |    10.10     | 2 h. 30 min.
 -----------------------------------------------------------
-LD-AVE       |    10.51     |    15.35     | 4 h. 44 min.
+LD-AVE       |    07.45     |    15.35     | 7 h. 50 min.
 -----------------------------------------------------------
-AVE          |    12.34     |    15.12     | 2 h. 38 min.
+AVE          |    08.00     |    11.12     | 3 h. 12 min.
 -----------------------------------------------------------
-AVE INT      |    13.22     |    15.45     | 2 h. 23 min.
+AVE          |    08.25     |    10.55     | 2 h. 30 min.
 -----------------------------------------------------------
-AVE          |    14.34     |    17.12     | 2 h. 38 min.
+REG.EXP.     |    08.43     |    18.09     | 9 h. 26 min.
 -----------------------------------------------------------
-AVE          |    16.34     |    19.12     | 2 h. 38 min.
+AVE          |    09.00     |    11.45     | 2 h. 45 min.
 -----------------------------------------------------------
-AVE          |    18.34     |    21.12     | 2 h. 38 min.
+AVLO         |    10.00     |    13.17     | 3 h. 17 min.
 -----------------------------------------------------------
-AVE          |    19.14     |    21.45     | 2 h. 31 min.
+AVE          |    11.00     |    13.45     | 2 h. 45 min.
 -----------------------------------------------------------
-AVE          |    20.34     |    23.12     | 2 h. 38 min.
+AVE          |    12.00     |    15.12     | 3 h. 12 min.
+-----------------------------------------------------------
+AVE INT      |    12.50     |    15.45     | 2 h. 55 min.
+-----------------------------------------------------------
+AVE          |    13.25     |    15.54     | 2 h. 29 min.
+-----------------------------------------------------------
+AVE          |    14.00     |    17.12     | 3 h. 12 min.
+-----------------------------------------------------------
+AVLO         |    15.00     |    17.45     | 2 h. 45 min.
+-----------------------------------------------------------
+AVE          |    15.25     |    17.55     | 2 h. 30 min.
+-----------------------------------------------------------
+AVE          |    16.00     |    19.12     | 3 h. 12 min.
+-----------------------------------------------------------
+AVE          |    16.25     |    18.55     | 2 h. 30 min.
+-----------------------------------------------------------
+AVE          |    17.00     |    19.45     | 2 h. 45 min.
+-----------------------------------------------------------
+AVE          |    17.25     |    19.55     | 2 h. 30 min.
+-----------------------------------------------------------
+AVE          |    18.00     |    21.12     | 3 h. 12 min.
+-----------------------------------------------------------
+AVE          |    18.25     |    20.55     | 2 h. 30 min.
+-----------------------------------------------------------
+AVE          |    18.40     |    21.45     | 3 h. 5 min.
+-----------------------------------------------------------
+AVE          |    19.25     |    21.55     | 2 h. 30 min.
+-----------------------------------------------------------
+AVE          |    20.00     |    23.12     | 3 h. 12 min.
+-----------------------------------------------------------
+AVLO         |    21.00     |    23.45     | 2 h. 45 min.
+-----------------------------------------------------------
+AVE          |    21.25     |    23.55     | 2 h. 30 min.
 ===========================================================
+```
+
+## Usage (Library)
+
+`renfe-cli` can be imported as a python package into your project, offering utilities when willing to deal with the Renfe search web site.
+
+```bash
+$ python
+Python 3.8.18 (default, Aug 25 2023, 13:20:30)
+[GCC 11.4.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import renfe_cli
+>>> renfe_cli.
+renfe_cli.load_stations(     renfe_cli.main(              renfe_cli.print_timetable(   renfe_cli.renfe_cli          renfe_cli.search_timetable(
+>>> renfe_cli.load_stations()
+['A Coruña', 'Abrantes', 'Alicante / Alacant ', 'Albacete ', 'Alcantarilla-Los Romanos', 'Alcázar de San Juan ', 'Algeciras ', 'Almería', 'Altet Bus', 'Aguadulce Bus', 'Aix En Provence ', 'Andorra-Bus', 'Antequera (ALL)', 'Avignon ', 'Avila ', 'Badajoz', 'Barcelona (ALL) ', 'Beziers', 'Benicassim', 'Bilbao (ALL)', 'Bobadilla ', 'Burgos Rosa Manzano', 'Cáceres ', 'Cádiz ', 'Calatayud ', 'Campus Rabanales', 'Cartagena ', 'Castellón /Castelló', 'Ciudad Real ', 'Córdoba', 'Cuenca (ALL) ', 'Denia-Bus', 'Elda-Petrer ', 'Elche AV/Elx AV ', 'Entroncamento', 'Estepona Bus', 'Ferrol ', 'Figueres', 'Figueres Bus', 'Figueres Vilafant', 'Gandía ', 'Gijón ', 'Girona ', 'Granada ', 'Guadalajara (ALL) ', 'Huelva', 'Huesca', 'Irun-Hendaya (ALL) ', 'Iruña/Pamplona', 'Jaca-Bus', 'Jaén ', 'Játiva/Xàtiva', 'Javea-Bus', 'Jerez de la Frontera ', 'La Hoya', 'León ', 'Linares-Baeza', 'Librilla', 'Lyon', 'Lleida ', 'Logroño ', 'Lorca-San Diego', 'Lorca-Sutullena ', 'Los Arenales Bus', 'Lugo ', 'Madrid (ALL) ', 'Málaga María Zambrano', 'Marbella Bus', 'Marseille St Charles', 'Marvao - Beira ', 'Medina del Campo (ALL) ', 'Mérida ', 'Miranda de Ebro ', 'Monforte de Lemos ', 'Monzón-Río Cinca ', 'Montpellier', 'Murcia', 'Narbonne', 'Navalmoral de la Mata ', 'Nimes ', 'Nine', 'Oporto-Porto Campanha', 'Orihuela-Miguel Hernádez', 'Oropesa del Mar/Orpesa', 'Ourense', 'Oviedo ', 'Padrón-Barbanza', 'Palencia ', 'Pamplona/Iruña ', 'Perpignan ', 'Ponferrada ', 'Pontevedra ', 'Portbou ', 'Porto Campanha-Oporto', 'Puebla de Sanabria (ALL)', 'Puente Genil (ALL)', 'Puerto Santa María ', 'Puertollano ', 'Redondela (ALL)', 'Reus ', 'Requena / Utiel ', 'Roquetas-Bus', 'Sahagún ', 'Salamanca (ALL) ', 'San Fernando (ALL) ', 'San Sebastián/Donostia ', 'Santa Pola Bus', 'Santander (ALL)', 'Santiago de Compostela ', 'Segovia (ALL)', 'Sevilla ', 'Soria ', 'Tarragona (ALL)', 'Teruel ', 'Toledo ', 'Tudela de Navarra ', 'Valdepeñas ', 'Valence', 'Valencia (ALL) ', 'Valença Do Minho', 'Valladolid Campo Grande', 'Vielha-Bus', 'Viana Da Castelo', 'Vigo (ALL)', 'Vva. de Córdoba-Los Pedroches', 'Villena ', 'Villena AV', 'Vitoria/Gasteiz ', 'Xàtiva/Játiva', 'Zafra', 'Zafra Feria', 'Zamora ', 'Zaragoza (ALL)']
 ```
 
 ---
 
-## Usage (Library)
-
-TBD
-
 ## Contribute or Report with Issues
 
 If Renfe's website is changed or you find any issue to be fixed or nice enhancements to have, please: [create an issue](https://github.com/gerardcl/renfe-cli/issues).
+
+### Development
+
+This project makes use of Rust bindings for the Python interpreter thanks to [pyo3](https://pyo3.rs). It is already available as a dependency.
+
+To develop, build and publish, this project makes use of [maturin](https://www.maturin.rs/) project. See [usage](https://www.maturin.rs/#usage).
+
+Example of first time working with this repository:
+
+```bash
+$ git clone https://github.com/gerardcl/renfe-cli.git && cd renfe-cli
+$ python -m venv venv
+$ . venv/bin/activate
+$ pip install -U pip
+$ pip install -U maturin
+$ maturing develop
+🔗 Found pyo3 bindings with abi3 support for Python ≥ 3.7
+🐍 Not using a specific python interpreter
+📡 Using build options features from pyproject.toml
+   Compiling renfe-cli v4.1.0 (/path/to/renfe-cli)
+    Finished dev [unoptimized + debuginfo] target(s) in 7.07s
+📦 Built wheel for abi3 Python ≥ 3.7 to /tmp/.tmpDsjowL/renfe_cli-4.1.0-cp37-abi3-linux_x86_64.whl
+🛠 Installed renfe-cli-4.1.0
+```
+
+Maturin takes care of compiling the rust code, generating the bindings for python and installing the package for local use (as library or binary/CLI).
