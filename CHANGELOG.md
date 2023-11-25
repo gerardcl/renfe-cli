@@ -1,5 +1,8 @@
 # Changelog
 
+## v4.0.0 (2023-11-25)
+
+* Refactor to Rust [#175](https://github.com/gerardcl/renfe-cli/issues/175)
 
 ## v3.3.0 (2022-02-19)
 

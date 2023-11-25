@@ -1,8 +1,7 @@
-use pyo3::prelude::*;
-
 use headless_chrome::{Browser, LaunchOptions};
+use pyo3::pyfunction;
 use scraper::{ElementRef, Html, Selector};
-use std::time::Duration;
+use std::{collections::HashMap, time::Duration};
 
 trait VecParser {
     fn texts_parser(&self, selector: Selector) -> Vec<String>;
@@ -41,6 +40,22 @@ pub fn search_timetable(
     month: String,
     year: String,
 ) -> Vec<Vec<String>> {
+    let months: HashMap<&str, &str> = HashMap::from([
+        ("1", "Ene"),
+        ("2", "Feb"),
+        ("3", "Mar"),
+        ("4", "Abr"),
+        ("5", "May"),
+        ("6", "Jun"),
+        ("7", "Jul"),
+        ("8", "Ago"),
+        ("9", "Sep"),
+        ("10", "Oct"),
+        ("11", "Nov"),
+        ("12", "Dec"),
+    ]);
+
+    println!("loading headless chrome browser");
     let browser = Browser::new(LaunchOptions {
         headless: true,
         sandbox: true,
@@ -61,13 +76,11 @@ pub fn search_timetable(
     })
     .unwrap();
 
-    println!("loadingn new tab");
     let tab = browser.new_tab().unwrap();
-    println!("got new tab");
 
+    println!("navigating to renfe timetable search page");
     tab.navigate_to("https://www.renfe.com/es/es/viajar/informacion-util/horarios")
         .unwrap();
-    println!("navigating");
 
     // let _jpeg_data = tab.capture_screenshot(
     //     Page::CaptureScreenshotFormatOption::Jpeg,
@@ -77,62 +90,55 @@ pub fn search_timetable(
 
     // let img = image::load_from_memory(&_jpeg_data).expect("Data from stdin could not be decoded.");
     // print(&img, &Config::default()).expect("Image printing failed.");
+    println!("waiting for search page");
     tab.wait_until_navigated()
         .unwrap()
         .wait_for_elements_by_xpath(r#"//*[@id="O"]"#)
         .unwrap();
 
+    println!("adding origin station");
     tab.find_element_by_xpath(r#"//*[@id="O"]"#)
         .unwrap()
         .click()
         .unwrap();
-    println!("got input bar");
-
     tab.type_str(&origin).unwrap().press_key("Enter").unwrap();
-    println!("search");
 
+    println!("adding destination station");
     tab.find_element_by_xpath(r#"//*[@id="D"]"#)
         .unwrap()
         .click()
         .unwrap();
-    println!("got input bar");
-
     tab.type_str(&destination)
         .unwrap()
         .press_key("Enter")
         .unwrap();
-    println!("search");
 
+    println!("adding day");
     tab.find_element_by_xpath(r#"//*[@id="DF"]"#)
         .unwrap()
         .click()
         .unwrap();
-    println!("got input bar");
-
     tab.type_str(&day).unwrap().press_key("Enter").unwrap();
-    println!("search");
 
+    println!("adding month");
     tab.find_element_by_xpath(r#"//*[@id="MF"]"#)
         .unwrap()
         .click()
         .unwrap();
-    println!("got input bar");
+    tab.type_str(months[&month.as_str()])
+        .unwrap()
+        .press_key("Enter")
+        .unwrap();
 
-    tab.type_str(&month).unwrap().press_key("Enter").unwrap();
-    println!("search");
-
+    println!("adding year");
     tab.find_element_by_xpath(r#"//*[@id="AF"]"#)
         .unwrap()
         .click()
         .unwrap();
-    println!("got input bar");
-
     let elem = tab.type_str(&year).unwrap().press_key("Enter").unwrap();
-    println!("searching");
 
+    println!("searching timetable");
     elem.press_key("Tab").unwrap().press_key("Enter").unwrap();
-
-    println!("search");
 
     // wait on navigating to search result page
     tab.wait_until_navigated()
@@ -140,13 +146,14 @@ pub fn search_timetable(
         .wait_for_elements_by_xpath(r#"//*[@id="contenedor"]"#)
         .unwrap();
 
-    println!("got html");
-
+    println!("got timetable page");
     let html = tab
         .find_element_by_xpath(r#"//*[@id="contenedor"]"#)
         .unwrap()
         .get_content()
         .unwrap();
+
+    println!("loading timetable");
 
     let parsed_html = Html::parse_document(&html);
 
@@ -207,7 +214,7 @@ mod tests {
             "Girona".to_owned(),
             "Barcelona".to_owned(),
             "28".to_owned(),
-            "Nov".to_owned(),
+            "11".to_owned(),
             "2023".to_owned(),
         ));
 
