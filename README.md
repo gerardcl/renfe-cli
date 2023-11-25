@@ -1,28 +1,28 @@
 [![CICD](https://github.com/gerardcl/renfe-cli/actions/workflows/CICD.yml/badge.svg)](https://github.com/gerardcl/renfe-cli/actions/workflows/CICD.yml)
 
-# RENFE TIMETABLES CLI
+# Renfe Timetables CLI
 
-Get faster RENFE Spanish trains timetables in your terminal, with Python3.7+ support.
+Get faster Renfe trains timetables in your terminal, with Python3.7+ support.
 No longer need to open the browser! Just keep using your terminal 😀
 
-**HIGHLIGHT**: Although it is provided as a python package (script and library), it is entirely written in Rust (since v4.0.0).
-
-**NOTE** since I am more often using Rodalies trains I have created [rodalies-cli](https://github.com/gerardcl/rodalies-cli). I hope you like it too!
+`renfe-cli` is written in [Rust](https://www.rust-lang.org/) (since v4.0.0) and published to [pypi.org](https://pypi.org/project/renfe-cli/) as a Python package (CLI and library).
 
 See the [changelog](https://github.com/gerardcl/renfe-cli/blob/master/CHANGELOG.md).
+
+**NOTE** since I am more often using Rodalies trains I have created [rodalies-cli](https://github.com/gerardcl/rodalies-cli). I hope you like it too!
 
 ## Installation
 
 Install Python CLI package [renfe-cli](https://pypi.org/project/renfe-cli/)
 
 ```bash
-$ pip install renfe-cli --upgrade
+pip install renfe-cli --upgrade
 ```
 
 ## Usage (CLI)
 
-This CLI behaves as a person/bot going through the official renfe.com site, using headless chrome browsers.
-If the headless chrome browser is not found it will download it.
+This CLI behaves as a person/bot going through the official renfe.com search site, using headless chrome browser.
+If the headless chrome browser is not found it will be downloaded.
 
 The navigation through the site happens in the following steps:
 
@@ -49,57 +49,50 @@ Options:
 
 ### **Getting the timetable**
 
-Timetable defaults to `today`, from `Sils` (ID is `79202`) to `Barcelona Passeig de Gràcia` (ID is `71802`):
+In this new major release there is still no interactive mode nor defaults; one must provide all inputs, like:
 
 ```bash
-$ renfe-cli
-Today is: 2021-05-22
-Searching timetable for date: 2021-5-22
-From SILS to BARCELONA-PASSEIG DE GRACIA
-Be patient, navigating through renfe site now...
-=======================TIMETABLE======================
- Train      | Departure  | Arrival    | Duration
-------------------------------------------------------
- MD         | 06.45      | 07.49      | 1 h. 4 min.
-------------------------------------------------------
- MD         | 07.30      | 08.34      | 1 h. 4 min.
-------------------------------------------------------
- REGIONAL   | 08.29      | 09.34      | 1 h. 5 min.
-------------------------------------------------------
- MD         | 09.05      | 10.04      | 59 min.
-------------------------------------------------------
- REGIONAL   | 09.59      | 11.04      | 1 h. 5 min.
-------------------------------------------------------
- MD         | 10.35      | 11.34      | 59 min.
-------------------------------------------------------
- REGIONAL   | 11.59      | 13.04      | 1 h. 5 min.
-------------------------------------------------------
- MD         | 12.35      | 13.34      | 59 min.
-------------------------------------------------------
- REGIONAL   | 13.59      | 15.04      | 1 h. 5 min.
-------------------------------------------------------
- MD         | 14.35      | 15.34      | 59 min.
-------------------------------------------------------
- REGIONAL   | 15.59      | 17.04      | 1 h. 5 min.
-------------------------------------------------------
- MD         | 16.35      | 17.34      | 59 min.
-------------------------------------------------------
- REGIONAL   | 17.59      | 19.04      | 1 h. 5 min.
-------------------------------------------------------
- MD         | 18.35      | 19.34      | 59 min.
-------------------------------------------------------
- MD         | 19.35      | 20.34      | 59 min.
-------------------------------------------------------
- REGIONAL   | 21.09      | 22.14      | 1 h. 5 min.
-------------------------------------------------------
- REGIONAL   | 21.42      | 22.46      | 1 h. 4 min.
-======================================================
-```
-
-Which would be the same as:
-
-```bash
-$ renfe-cli -d 0 -o 79202 -t BARCE
+$ renfe-cli -f Tarr -t Mad -d 27 -m 11 -y 2023
+loading headless chrome browser
+navigating to renfe timetable search page
+waiting for search page
+adding origin station
+adding destination station
+adding day
+adding month
+adding year
+searching timetable
+got timetable page
+loading timetable
+=========================TIMETABLE=========================
+Train        |   Departure  |   Arrival    | Duration
+-----------------------------------------------------------
+AVE          |    06.25     |    09.10     | 2 h. 45 min.
+-----------------------------------------------------------
+LD-AVE       |    08.22     |    15.35     | 7 h. 13 min.
+-----------------------------------------------------------
+AVE          |    08.34     |    11.12     | 2 h. 38 min.
+-----------------------------------------------------------
+REG.EXP.     |    10.11     |    18.09     | 7 h. 58 min.
+-----------------------------------------------------------
+AVLO         |    10.34     |    13.17     | 2 h. 43 min.
+-----------------------------------------------------------
+LD-AVE       |    10.51     |    15.35     | 4 h. 44 min.
+-----------------------------------------------------------
+AVE          |    12.34     |    15.12     | 2 h. 38 min.
+-----------------------------------------------------------
+AVE INT      |    13.22     |    15.45     | 2 h. 23 min.
+-----------------------------------------------------------
+AVE          |    14.34     |    17.12     | 2 h. 38 min.
+-----------------------------------------------------------
+AVE          |    16.34     |    19.12     | 2 h. 38 min.
+-----------------------------------------------------------
+AVE          |    18.34     |    21.12     | 2 h. 38 min.
+-----------------------------------------------------------
+AVE          |    19.14     |    21.45     | 2 h. 31 min.
+-----------------------------------------------------------
+AVE          |    20.34     |    23.12     | 2 h. 38 min.
+===========================================================
 ```
 
 ---
