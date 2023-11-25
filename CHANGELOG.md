@@ -1,5 +1,10 @@
 # Changelog
 
+## v4.1.0 (2023-11-25)
+
+* Defaults for date params [#177](https://github.com/gerardcl/renfe-cli/issues/177)
+* Enable wait time for search results page [#178](https://github.com/gerardcl/renfe-cli/issues/178)
+
 ## v4.0.0 (2023-11-25)
 
 * Refactor to Rust [#175](https://github.com/gerardcl/renfe-cli/issues/175)

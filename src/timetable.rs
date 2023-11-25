@@ -1,25 +1,16 @@
 use headless_chrome::{Browser, LaunchOptions};
 use pyo3::pyfunction;
 use scraper::{ElementRef, Html, Selector};
-use std::{collections::HashMap, time::Duration};
+use std::{collections::HashMap, thread::sleep, time::Duration};
 
 trait VecParser {
     fn texts_parser(&self, selector: Selector) -> Vec<String>;
-    fn alts_parser(&self, selector: Selector) -> Vec<String>;
 }
 
 impl VecParser for ElementRef<'_> {
     fn texts_parser(&self, selector: Selector) -> Vec<String> {
         self.select(&selector)
             .flat_map(|el| el.text())
-            .map(|t| t.to_string())
-            .map(|x| x.trim().to_string())
-            .filter(|x| !x.is_empty())
-            .collect()
-    }
-    fn alts_parser(&self, selector: Selector) -> Vec<String> {
-        self.select(&selector)
-            .flat_map(|el| el.value().attr("alt"))
             .map(|t| t.to_string())
             .map(|x| x.trim().to_string())
             .filter(|x| !x.is_empty())
@@ -39,6 +30,7 @@ pub fn search_timetable(
     day: String,
     month: String,
     year: String,
+    wait: u64,
 ) -> Vec<Vec<String>> {
     let months: HashMap<&str, &str> = HashMap::from([
         ("1", "Ene"),
@@ -139,6 +131,8 @@ pub fn search_timetable(
 
     println!("searching timetable");
     elem.press_key("Tab").unwrap().press_key("Enter").unwrap();
+
+    sleep(Duration::from_secs(wait));
 
     // wait on navigating to search result page
     tab.wait_until_navigated()
