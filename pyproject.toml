@@ -1,0 +1,48 @@
+[build-system]
+requires = ["maturin>=1.3,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "renfe-cli"
+requires-python = ">=3.7"
+authors = [
+  {name = "Gerard Castillo Lasheras", email = "gerardcl@gmail.com"},
+]
+maintainers = [
+  {name = "Gerard Castillo Lasheras", email = "gerardcl@gmail.com"},
+]
+description = "Get faster Renfe Spanish Trains timetables in your terminal."
+readme = "README.md"
+license = {file = "LICENSE"}
+keywords = ["timetables", "trains", "renfe", "cli", "rust"]
+classifiers = [
+    "Programming Language :: Rust",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: MacOS",
+    "Operating System :: Unix",
+    "Operating System :: POSIX",
+    "Operating System :: Microsoft :: Windows",
+    "Topic :: Utilities",
+    "Topic :: Terminals",
+    "Topic :: Text Processing :: Markup :: HTML",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/gerardcl/renfe-cli"
+Documentation = "https://github.com/gerardcl/renfe-cli"
+Repository = "https://github.com/gerardcl/renfe-cli"
+Issues = "https://github.com/gerardcl/renfe-cli/issues"
+Changelog = "https://github.com/gerardcl/renfe-cli/blob/master/CHANGELOG.md"
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+
+[project.scripts]
+renfe-cli = "renfe_cli:main"
