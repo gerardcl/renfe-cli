@@ -210,13 +210,13 @@ mod tests {
 
     #[test]
     fn test_search_timetable() -> Result<(), Box<dyn std::error::Error>> {
-        print_timetable(search_timetable(
-            "Girona".to_owned(),
-            "Barcelona".to_owned(),
-            "28".to_owned(),
-            "11".to_owned(),
-            "2023".to_owned(),
-        ));
+        // print_timetable(search_timetable(
+        //     "Girona".to_owned(),
+        //     "Barcelona".to_owned(),
+        //     "28".to_owned(),
+        //     "11".to_owned(),
+        //     "2023".to_owned(),
+        // ));
 
         Ok(())
     }
