@@ -1,3 +1,5 @@
+[![CICD](https://github.com/gerardcl/renfe-cli/actions/workflows/CICD.yml/badge.svg)](https://github.com/gerardcl/renfe-cli/actions/workflows/CICD.yml)
+
 # RENFE TIMETABLES CLI
 
 Get faster RENFE Spanish trains timetables in your terminal, with Python3.7+ support.
