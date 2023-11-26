@@ -50,12 +50,15 @@ Options:
 
 ### **Getting the timetable**
 
-In this new major release there is still no interactive mode nor defaults; one must provide all inputs, like:
+Let's show an example of minimal inputs (origin and destination stations) with specific date:
 
 ```bash
-$ renfe-cli -f Barce -t Mad -d30
-Today is: 2023-11-25
-Searching timetable for date: 2023-11-30
+$ renfe-cli -f Barc -t Mad -d 27
+Loading stations from Renfe web
+Provided input 'Barc' station matches with 'Barcelona (ALL) '...continue
+Provided input 'Mad' station matches with 'Madrid (ALL) '...continue
+Today is: 2023-11-26
+Searching timetable for date: 2023-11-27
 loading headless chrome browser
 navigating to renfe timetable search page
 waiting for search page
@@ -140,10 +143,14 @@ Python 3.8.18 (default, Aug 25 2023, 13:20:30)
 [GCC 11.4.0] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import renfe_cli
->>> renfe_cli.
-renfe_cli.load_stations(     renfe_cli.main(              renfe_cli.print_timetable(   renfe_cli.renfe_cli          renfe_cli.search_timetable(
->>> renfe_cli.load_stations()
-['A Coruña', 'Abrantes', 'Alicante / Alacant ', 'Albacete ', 'Alcantarilla-Los Romanos', 'Alcázar de San Juan ', 'Algeciras ', 'Almería', 'Altet Bus', 'Aguadulce Bus', 'Aix En Provence ', 'Andorra-Bus', 'Antequera (ALL)', 'Avignon ', 'Avila ', 'Badajoz', 'Barcelona (ALL) ', 'Beziers', 'Benicassim', 'Bilbao (ALL)', 'Bobadilla ', 'Burgos Rosa Manzano', 'Cáceres ', 'Cádiz ', 'Calatayud ', 'Campus Rabanales', 'Cartagena ', 'Castellón /Castelló', 'Ciudad Real ', 'Córdoba', 'Cuenca (ALL) ', 'Denia-Bus', 'Elda-Petrer ', 'Elche AV/Elx AV ', 'Entroncamento', 'Estepona Bus', 'Ferrol ', 'Figueres', 'Figueres Bus', 'Figueres Vilafant', 'Gandía ', 'Gijón ', 'Girona ', 'Granada ', 'Guadalajara (ALL) ', 'Huelva', 'Huesca', 'Irun-Hendaya (ALL) ', 'Iruña/Pamplona', 'Jaca-Bus', 'Jaén ', 'Játiva/Xàtiva', 'Javea-Bus', 'Jerez de la Frontera ', 'La Hoya', 'León ', 'Linares-Baeza', 'Librilla', 'Lyon', 'Lleida ', 'Logroño ', 'Lorca-San Diego', 'Lorca-Sutullena ', 'Los Arenales Bus', 'Lugo ', 'Madrid (ALL) ', 'Málaga María Zambrano', 'Marbella Bus', 'Marseille St Charles', 'Marvao - Beira ', 'Medina del Campo (ALL) ', 'Mérida ', 'Miranda de Ebro ', 'Monforte de Lemos ', 'Monzón-Río Cinca ', 'Montpellier', 'Murcia', 'Narbonne', 'Navalmoral de la Mata ', 'Nimes ', 'Nine', 'Oporto-Porto Campanha', 'Orihuela-Miguel Hernádez', 'Oropesa del Mar/Orpesa', 'Ourense', 'Oviedo ', 'Padrón-Barbanza', 'Palencia ', 'Pamplona/Iruña ', 'Perpignan ', 'Ponferrada ', 'Pontevedra ', 'Portbou ', 'Porto Campanha-Oporto', 'Puebla de Sanabria (ALL)', 'Puente Genil (ALL)', 'Puerto Santa María ', 'Puertollano ', 'Redondela (ALL)', 'Reus ', 'Requena / Utiel ', 'Roquetas-Bus', 'Sahagún ', 'Salamanca (ALL) ', 'San Fernando (ALL) ', 'San Sebastián/Donostia ', 'Santa Pola Bus', 'Santander (ALL)', 'Santiago de Compostela ', 'Segovia (ALL)', 'Sevilla ', 'Soria ', 'Tarragona (ALL)', 'Teruel ', 'Toledo ', 'Tudela de Navarra ', 'Valdepeñas ', 'Valence', 'Valencia (ALL) ', 'Valença Do Minho', 'Valladolid Campo Grande', 'Vielha-Bus', 'Viana Da Castelo', 'Vigo (ALL)', 'Vva. de Córdoba-Los Pedroches', 'Villena ', 'Villena AV', 'Vitoria/Gasteiz ', 'Xàtiva/Játiva', 'Zafra', 'Zafra Feria', 'Zamora ', 'Zaragoza (ALL)']
+>>> renfe = renfe_cli.
+renfe_cli.Renfe(             renfe_cli.main(              renfe_cli.print_timetable(   renfe_cli.renfe_cli          renfe_cli.search_timetable(
+>>> renfe = renfe_cli.Renfe()
+Loading stations from Renfe web
+>>> renfe.
+renfe.filter_station(  renfe.stations_match(
+>>> renfe.stations_match("Bar")
+['Barcelona (ALL) ', 'Padrón-Barbanza']
 ```
 
 ---
