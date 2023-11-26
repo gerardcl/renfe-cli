@@ -1,5 +1,5 @@
 use headless_chrome::{Browser, LaunchOptions};
-use pyo3::pyfunction;
+use pyo3::{pyfunction, PyResult};
 use scraper::{ElementRef, Html, Selector};
 use std::{collections::HashMap, thread::sleep, time::Duration};
 
@@ -23,15 +23,7 @@ fn make_selector(selector: &str) -> Selector {
     Selector::parse(selector).unwrap()
 }
 
-#[pyfunction]
-pub fn search_timetable(
-    origin: String,
-    destination: String,
-    day: String,
-    month: String,
-    year: String,
-    wait: u64,
-) -> Vec<Vec<String>> {
+fn to_renfe_month(month: String) -> String {
     let months: HashMap<&str, &str> = HashMap::from([
         ("1", "Ene"),
         ("2", "Feb"),
@@ -46,7 +38,18 @@ pub fn search_timetable(
         ("11", "Nov"),
         ("12", "Dec"),
     ]);
+    months[month.as_str()].to_owned()
+}
 
+#[pyfunction]
+pub fn search_timetable(
+    origin: String,
+    destination: String,
+    day: String,
+    month: String,
+    year: String,
+    wait: u64,
+) -> PyResult<Vec<Vec<String>>> {
     println!("loading headless chrome browser");
     let browser = Browser::new(LaunchOptions {
         headless: true,
@@ -72,6 +75,8 @@ pub fn search_timetable(
 
     println!("navigating to renfe timetable search page");
     tab.navigate_to("https://www.renfe.com/es/es/viajar/informacion-util/horarios")
+        .unwrap()
+        .wait_until_navigated()
         .unwrap();
 
     // let _jpeg_data = tab.capture_screenshot(
@@ -117,7 +122,7 @@ pub fn search_timetable(
         .unwrap()
         .click()
         .unwrap();
-    tab.type_str(months[&month.as_str()])
+    tab.type_str(&to_renfe_month(month))
         .unwrap()
         .press_key("Enter")
         .unwrap();
@@ -178,7 +183,7 @@ pub fn search_timetable(
         tracks.push(row);
     }
 
-    tracks
+    Ok(tracks)
 }
 
 #[pyfunction]
@@ -200,17 +205,22 @@ pub fn print_timetable(tracks: Vec<Vec<String>>) {
 
 #[cfg(test)]
 mod tests {
+    use chrono::{Datelike, Utc};
+
     use crate::{print_timetable, search_timetable};
 
     #[test]
-    fn test_search_timetable() -> Result<(), Box<dyn std::error::Error>> {
-        // print_timetable(search_timetable(
-        //     "Girona".to_owned(),
-        //     "Barcelona".to_owned(),
-        //     "28".to_owned(),
-        //     "11".to_owned(),
-        //     "2023".to_owned(),
-        // ));
+    fn test_search_and_print_timetable() -> Result<(), Box<dyn std::error::Error>> {
+        let now = Utc::now();
+
+        print_timetable(search_timetable(
+            "Girona".to_owned(),
+            "Barcelona".to_owned(),
+            now.day().to_string(),
+            now.month().to_string(),
+            now.year().to_string(),
+            2,
+        )?);
 
         Ok(())
     }
