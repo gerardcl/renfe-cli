@@ -1,51 +1,49 @@
 use chrono::{Datelike, Utc};
 use getopts::Options;
-use pyo3::pyfunction;
+use pyo3::{exceptions::PyValueError, pyfunction, PyResult};
 use std::env;
 
-use crate::timetable::{print_timetable, search_timetable};
+use crate::{
+    stations::Renfe,
+    timetable::{print_timetable, search_timetable},
+};
 
 #[pyfunction]
-pub fn main() {
+pub fn main() -> PyResult<()> {
     let args: Vec<String> = env::args().collect();
     let program = args[0].clone();
     let now = Utc::now();
     let opts = set_opts();
+    let renfe = Renfe::new()?;
 
     let matches = match opts.parse(&args[1..]) {
         Ok(m) => m,
         Err(f) => {
-            panic!("{}", f.to_string())
+            return Err(PyValueError::new_err(f.to_string()));
         }
     };
+
     if matches.opt_present("h") {
         print_usage(&program, opts);
-        return;
+        return Ok(());
     }
-    let origin = matches.opt_str("f");
-    let destination = matches.opt_str("t");
+    let origin = renfe.filter_station(matches.opt_str("f").unwrap_or("".to_owned()))?;
+    let destination = renfe.filter_station(matches.opt_str("t").unwrap_or("".to_owned()))?;
     let day = matches.opt_str("d").unwrap_or(now.day().to_string());
     let month = matches.opt_str("m").unwrap_or(now.month().to_string());
     let year = matches.opt_str("y").unwrap_or(now.year().to_string());
     let wait = matches
         .opt_str("w")
         .unwrap_or(2.to_string())
-        .parse::<u64>()
-        .unwrap();
+        .parse::<u64>()?;
 
     println!("Today is: {}-{}-{}", now.year(), now.month(), now.day());
     println!("Searching timetable for date: {}-{}-{}", year, month, day);
 
-    let timetable = search_timetable(
-        origin.unwrap(),
-        destination.unwrap(),
-        day,
-        month,
-        year,
-        wait,
-    );
+    let timetable = search_timetable(origin, destination, day, month, year, wait)?;
 
     print_timetable(timetable);
+    Ok(())
 }
 
 fn print_usage(program: &str, opts: Options) {
