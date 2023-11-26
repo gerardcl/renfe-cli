@@ -79,63 +79,64 @@ pub fn search_timetable(
         .wait_until_navigated()
         .unwrap();
 
-    // let _jpeg_data = tab.capture_screenshot(
-    //     Page::CaptureScreenshotFormatOption::Jpeg,
-    //     None,
-    //     None,
-    //     true)?;
+    sleep(Duration::from_secs(wait));
 
-    // let img = image::load_from_memory(&_jpeg_data).expect("Data from stdin could not be decoded.");
-    // print(&img, &Config::default()).expect("Image printing failed.");
     println!("waiting for search page");
     tab.wait_until_navigated()
         .unwrap()
         .wait_for_elements_by_xpath(r#"//*[@id="O"]"#)
         .unwrap();
 
+    // let _jpeg_data = tab
+    //     .capture_screenshot(Page::CaptureScreenshotFormatOption::Jpeg, None, None, true)
+    //     .unwrap();
+    // std::fs::write("./screenshot1.jpg", _jpeg_data)?;
+
     println!("adding origin station");
     tab.find_element_by_xpath(r#"//*[@id="O"]"#)
         .unwrap()
         .click()
         .unwrap();
-    tab.type_str(&origin).unwrap().press_key("Enter").unwrap();
+    let elem = tab.type_str(&origin).unwrap();
+    elem.press_key("Tab").unwrap();
 
     println!("adding destination station");
     tab.find_element_by_xpath(r#"//*[@id="D"]"#)
         .unwrap()
         .click()
         .unwrap();
-    tab.type_str(&destination)
-        .unwrap()
-        .press_key("Enter")
-        .unwrap();
+    let elem = tab.type_str(&destination).unwrap();
+    elem.press_key("Tab").unwrap();
 
     println!("adding day");
     tab.find_element_by_xpath(r#"//*[@id="DF"]"#)
         .unwrap()
         .click()
         .unwrap();
-    tab.type_str(&day).unwrap().press_key("Enter").unwrap();
+    let elem = tab.type_str(&day).unwrap();
+    elem.press_key("Tab").unwrap();
 
     println!("adding month");
     tab.find_element_by_xpath(r#"//*[@id="MF"]"#)
         .unwrap()
         .click()
         .unwrap();
-    tab.type_str(&to_renfe_month(month))
-        .unwrap()
-        .press_key("Enter")
-        .unwrap();
+    tab.type_str(&to_renfe_month(month)).unwrap();
+    elem.press_key("Tab").unwrap();
 
     println!("adding year");
     tab.find_element_by_xpath(r#"//*[@id="AF"]"#)
         .unwrap()
         .click()
         .unwrap();
-    let elem = tab.type_str(&year).unwrap().press_key("Enter").unwrap();
+    let elem = tab.type_str(&year).unwrap();
+    elem.press_key("Tab").unwrap();
 
     println!("searching timetable");
-    elem.press_key("Tab").unwrap().press_key("Enter").unwrap();
+    tab.find_element_by_xpath(r#"/html/body/div/div/div/div/div/div/rf-sidebar-container/div/div/div/div/form/fieldset/div[3]"#)
+        .unwrap()
+        .click()
+        .unwrap();
 
     sleep(Duration::from_secs(wait));
 
