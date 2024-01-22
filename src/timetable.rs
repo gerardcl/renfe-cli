@@ -133,10 +133,8 @@ pub fn search_timetable(
     elem.press_key("Tab").unwrap();
 
     println!("searching timetable");
-    tab.find_element_by_xpath(r#"/html/body/div/div/div/div/div/div/rf-sidebar-container/div/div/div/div/form/fieldset/div[3]"#)
-        .unwrap()
-        .click()
-        .unwrap();
+
+    elem.press_key("Enter").unwrap();
 
     sleep(Duration::from_secs(wait));
 
