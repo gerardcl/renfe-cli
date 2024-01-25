@@ -23,6 +23,20 @@ fn make_selector(selector: &str) -> Selector {
     Selector::parse(selector).unwrap()
 }
 
+fn to_renfe_day(day: String) -> String {
+    let first_digit: u8 = day.parse::<u8>().unwrap() / 10;
+    let last_digit: u8 = day.parse::<u8>().unwrap() % 10;
+    let mut renfe_day: String = String::new();
+    if day.starts_with('0') {
+        day
+    } else {
+        for _ in 0..last_digit + 1 {
+            renfe_day += &first_digit.to_string();
+        }
+        renfe_day
+    }
+}
+
 fn to_renfe_month(month: String) -> String {
     let months: HashMap<&str, &str> = HashMap::from([
         ("1", "Ene"),
@@ -95,54 +109,37 @@ pub fn search_timetable(
     println!("adding origin station");
     tab.find_element_by_xpath(r#"//*[@id="O"]"#)
         .unwrap()
-        .click()
+        .type_into(&origin)
         .unwrap();
-    let elem = tab.type_str(&origin).unwrap();
-    elem.press_key("Tab").unwrap();
 
     println!("adding destination station");
     tab.find_element_by_xpath(r#"//*[@id="D"]"#)
         .unwrap()
-        .click()
+        .type_into(&destination)
         .unwrap();
-    let elem = tab.type_str(&destination).unwrap();
-    elem.press_key("Tab").unwrap();
 
     println!("adding day");
     tab.find_element_by_xpath(r#"//*[@id="DF"]"#)
         .unwrap()
-        .click()
+        .type_into(&to_renfe_day(day))
         .unwrap();
-    let elem = tab.type_str(&day).unwrap();
-    elem.press_key("Tab").unwrap();
 
     println!("adding month");
     tab.find_element_by_xpath(r#"//*[@id="MF"]"#)
         .unwrap()
-        .click()
+        .type_into(&to_renfe_month(month))
         .unwrap();
-    tab.type_str(&to_renfe_month(month)).unwrap();
-    elem.press_key("Tab").unwrap();
 
     println!("adding year");
     tab.find_element_by_xpath(r#"//*[@id="AF"]"#)
         .unwrap()
-        .click()
+        .type_into(&year)
         .unwrap();
-    let elem = tab.type_str(&year).unwrap();
-    elem.press_key("Tab").unwrap();
 
     println!("searching timetable");
-
-    elem.press_key("Enter").unwrap();
+    tab.press_key("Enter").unwrap();
 
     sleep(Duration::from_secs(wait));
-
-    // wait on navigating to search result page
-    tab.wait_until_navigated()
-        .unwrap()
-        .wait_for_elements_by_xpath(r#"//*[@id="contenedor"]"#)
-        .unwrap();
 
     println!("got timetable page");
     let html = tab

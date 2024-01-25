@@ -29,7 +29,7 @@ pub fn main() -> PyResult<()> {
     }
     let origin = renfe.filter_station(matches.opt_str("f").unwrap_or("".to_owned()))?;
     let destination = renfe.filter_station(matches.opt_str("t").unwrap_or("".to_owned()))?;
-    let day = matches.opt_str("d").unwrap_or(now.day().to_string());
+    let day = enrich_day(matches.opt_str("d").unwrap_or(now.day().to_string()));
     let month = matches.opt_str("m").unwrap_or(now.month().to_string());
     let year = matches.opt_str("y").unwrap_or(now.year().to_string());
     let wait = matches
@@ -37,13 +37,26 @@ pub fn main() -> PyResult<()> {
         .unwrap_or(2.to_string())
         .parse::<u64>()?;
 
-    println!("Today is: {}-{}-{}", now.year(), now.month(), now.day());
+    println!(
+        "Today is: {}-{}-{}",
+        now.year(),
+        now.month(),
+        enrich_day(now.day().to_string())
+    );
     println!("Searching timetable for date: {}-{}-{}", year, month, day);
 
     let timetable = search_timetable(origin, destination, day, month, year, wait)?;
 
     print_timetable(timetable);
     Ok(())
+}
+
+fn enrich_day(day: String) -> String {
+    if day.len() == 1 {
+        "0".to_owned() + &day
+    } else {
+        day
+    }
 }
 
 fn print_usage(program: &str, opts: Options) {
