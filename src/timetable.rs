@@ -141,14 +141,11 @@ pub fn search_timetable(
 
     sleep(Duration::from_secs(wait));
 
-    // wait on navigating to search result page
-    tab.wait_until_navigated()
-        .unwrap()
-        .wait_for_elements_by_xpath(r#"//*[@id="contenedor"]"#)
-        .unwrap();
-
+    // wait on navigating and prepare search in result page
     println!("got timetable page");
     let html = tab
+        .wait_until_navigated()
+        .unwrap()
         .find_element_by_xpath(r#"//*[@id="contenedor"]"#)
         .unwrap()
         .get_content()
