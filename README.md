@@ -45,7 +45,7 @@ Options:
     -m, --month MONTH   Set Month to search timetable for (default: today's month)
     -y, --year YEAR     Set Year to search timetable for (default: today's year)
     -w, --wait SECONDS  Set Wait time in seconds for Renfe search result page (default: 2)
-    -s, --sorted        Option to sort the timetable by Duration
+    -s, --sort          Option to sort the timetable by Duration
     -h, --help          Print this help menu
 ```
 

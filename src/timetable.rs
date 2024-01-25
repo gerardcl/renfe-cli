@@ -109,7 +109,7 @@ pub fn search_timetable(
         .unwrap()
         .click()
         .unwrap();
-let elem = tab.type_str(&origin).unwrap();
+    let elem = tab.type_str(&origin).unwrap();
     elem.press_key("Tab").unwrap();
 
     println!("adding destination station");
@@ -117,7 +117,7 @@ let elem = tab.type_str(&origin).unwrap();
         .unwrap()
         .click()
         .unwrap();
-let elem = tab.type_str(&destination).unwrap();
+    let elem = tab.type_str(&destination).unwrap();
     elem.press_key("Tab").unwrap();
 
     println!("adding day");
@@ -125,7 +125,7 @@ let elem = tab.type_str(&destination).unwrap();
         .unwrap()
         .click()
         .unwrap();
-let elem = tab.type_str(&day).unwrap();
+    let elem = tab.type_str(&day).unwrap();
     elem.press_key("Tab").unwrap();
 
     println!("adding month");
@@ -133,7 +133,7 @@ let elem = tab.type_str(&day).unwrap();
         .unwrap()
         .click()
         .unwrap();
-tab.type_str(&to_renfe_month(month)).unwrap();
+    tab.type_str(&to_renfe_month(month)).unwrap();
     elem.press_key("Tab").unwrap();
 
     println!("adding year");
@@ -141,7 +141,7 @@ tab.type_str(&to_renfe_month(month)).unwrap();
         .unwrap()
         .click()
         .unwrap();
-let elem = tab.type_str(&year).unwrap();
+    let elem = tab.type_str(&year).unwrap();
     elem.press_key("Tab").unwrap();
 
     println!("searching timetable");
@@ -152,7 +152,7 @@ let elem = tab.type_str(&year).unwrap();
 
     sleep(Duration::from_secs(wait));
 
-// wait on navigating to search result page
+    // wait on navigating to search result page
     tab.wait_until_navigated()
         .unwrap()
         .wait_for_elements_by_xpath(r#"//*[@id="contenedor"]"#)
