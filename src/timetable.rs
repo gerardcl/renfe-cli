@@ -86,14 +86,13 @@ pub fn search_timetable(
     .unwrap();
 
     let tab = browser.new_tab().unwrap();
+    tab.set_default_timeout(Duration::from_secs(wait));
 
     println!("navigating to renfe timetable search page");
     tab.navigate_to("https://www.renfe.com/es/es/viajar/informacion-util/horarios")
         .unwrap()
         .wait_until_navigated()
         .unwrap();
-
-    sleep(Duration::from_secs(wait));
 
     println!("waiting for search page");
     tab.wait_until_navigated()
@@ -139,21 +138,24 @@ pub fn search_timetable(
     println!("searching timetable");
     tab.press_key("Enter").unwrap();
 
-    sleep(Duration::from_secs(wait));
-
     // wait on navigating and prepare search in result page
     println!("got timetable page");
-    let html = tab
-        .wait_until_navigated()
+    let html = tab.wait_until_navigated().unwrap();
+
+    println!("wait for timetable iframe");
+    sleep(Duration::from_secs(wait));
+
+    let table_content = html
+        .wait_for_elements_by_xpath(r#"//*[@id="contenedor"]"#)
         .unwrap()
-        .find_element_by_xpath(r#"//*[@id="contenedor"]"#)
+        .first()
         .unwrap()
         .get_content()
         .unwrap();
 
     println!("loading timetable");
 
-    let parsed_html = Html::parse_document(&html);
+    let parsed_html = Html::parse_document(&table_content);
 
     let resum_selector = make_selector(r#"tr.odd"#);
     let total_tracks = parsed_html.select(&resum_selector);
@@ -218,7 +220,7 @@ mod tests {
             now.day().to_string(),
             now.month().to_string(),
             now.year().to_string(),
-            5,
+            15,
         )?);
 
         Ok(())
