@@ -23,6 +23,20 @@ fn make_selector(selector: &str) -> Selector {
     Selector::parse(selector).unwrap()
 }
 
+fn to_renfe_day(day: String) -> String {
+    let first_digit: u8 = day.parse::<u8>().unwrap() / 10;
+    let last_digit: u8 = day.parse::<u8>().unwrap() % 10;
+    let mut renfe_day: String = String::new();
+    if day.starts_with('0') {
+        day
+    } else {
+        for _ in 0..last_digit + 1 {
+            renfe_day += &first_digit.to_string();
+        }
+        renfe_day
+    }
+}
+
 fn to_renfe_month(month: String) -> String {
     let months: HashMap<&str, &str> = HashMap::from([
         ("1", "Ene"),
@@ -72,14 +86,13 @@ pub fn search_timetable(
     .unwrap();
 
     let tab = browser.new_tab().unwrap();
+    tab.set_default_timeout(Duration::from_secs(wait));
 
     println!("navigating to renfe timetable search page");
     tab.navigate_to("https://www.renfe.com/es/es/viajar/informacion-util/horarios")
         .unwrap()
         .wait_until_navigated()
         .unwrap();
-
-    sleep(Duration::from_secs(wait));
 
     println!("waiting for search page");
     tab.wait_until_navigated()
@@ -95,67 +108,58 @@ pub fn search_timetable(
     println!("adding origin station");
     tab.find_element_by_xpath(r#"//*[@id="O"]"#)
         .unwrap()
-        .click()
+        .type_into(&origin)
         .unwrap();
-    let elem = tab.type_str(&origin).unwrap();
-    elem.press_key("Tab").unwrap();
 
     println!("adding destination station");
     tab.find_element_by_xpath(r#"//*[@id="D"]"#)
         .unwrap()
-        .click()
+        .type_into(&destination)
         .unwrap();
-    let elem = tab.type_str(&destination).unwrap();
-    elem.press_key("Tab").unwrap();
 
     println!("adding day");
     tab.find_element_by_xpath(r#"//*[@id="DF"]"#)
         .unwrap()
-        .click()
+        .type_into(&to_renfe_day(day))
         .unwrap();
-    let elem = tab.type_str(&day).unwrap();
-    elem.press_key("Tab").unwrap();
 
     println!("adding month");
     tab.find_element_by_xpath(r#"//*[@id="MF"]"#)
         .unwrap()
-        .click()
+        .type_into(&to_renfe_month(month))
         .unwrap();
-    tab.type_str(&to_renfe_month(month)).unwrap();
-    elem.press_key("Tab").unwrap();
 
     println!("adding year");
     tab.find_element_by_xpath(r#"//*[@id="AF"]"#)
         .unwrap()
-        .click()
+        .type_into(&year)
         .unwrap();
-    let elem = tab.type_str(&year).unwrap();
-    elem.press_key("Tab").unwrap();
 
     println!("searching timetable");
-    tab.find_element_by_xpath(r#"/html/body/div/div/div/div/div/div/rf-sidebar-container/div/div/div/div/form/fieldset/div[3]"#)
+
+    tab.find_element_by_xpath(r#"//*[@id="seleccion"]/fieldset/div[3]/button"#)
         .unwrap()
         .click()
         .unwrap();
 
+    // wait on navigating and prepare search in result page
+    let html = tab.wait_until_navigated().unwrap();
+    println!("got timetable page");
+
+    println!("wait for timetable iframe");
     sleep(Duration::from_secs(wait));
 
-    // wait on navigating to search result page
-    tab.wait_until_navigated()
-        .unwrap()
+    let table_content = html
         .wait_for_elements_by_xpath(r#"//*[@id="contenedor"]"#)
-        .unwrap();
-
-    println!("got timetable page");
-    let html = tab
-        .find_element_by_xpath(r#"//*[@id="contenedor"]"#)
+        .unwrap()
+        .first()
         .unwrap()
         .get_content()
         .unwrap();
 
     println!("loading timetable");
 
-    let parsed_html = Html::parse_document(&html);
+    let parsed_html = Html::parse_document(&table_content);
 
     let resum_selector = make_selector(r#"tr.odd"#);
     let total_tracks = parsed_html.select(&resum_selector);
@@ -220,7 +224,7 @@ mod tests {
             now.day().to_string(),
             now.month().to_string(),
             now.year().to_string(),
-            2,
+            15,
         )?);
 
         Ok(())
