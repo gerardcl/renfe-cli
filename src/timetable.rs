@@ -136,11 +136,15 @@ pub fn search_timetable(
         .unwrap();
 
     println!("searching timetable");
-    tab.press_key("Enter").unwrap();
+
+    tab.find_element_by_xpath(r#"//*[@id="seleccion"]/fieldset/div[3]/button"#)
+        .unwrap()
+        .click()
+        .unwrap();
 
     // wait on navigating and prepare search in result page
-    println!("got timetable page");
     let html = tab.wait_until_navigated().unwrap();
+    println!("got timetable page");
 
     println!("wait for timetable iframe");
     sleep(Duration::from_secs(wait));
