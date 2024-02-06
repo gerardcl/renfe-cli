@@ -55,14 +55,14 @@ fn to_renfe_month(month: String) -> String {
     months[month.as_str()].to_owned()
 }
 
-fn get_duration_from_renfe_string(s: &str) -> u8 {
+fn get_duration_from_renfe_string(s: &str) -> u16 {
     let splits: Vec<&str> = s.split(' ').collect();
     if s.contains('h') {
-        let hours = splits[0].parse::<u8>().unwrap();
-        let minutes = splits[2].parse::<u8>().unwrap();
+        let hours = splits[0].parse::<u16>().unwrap();
+        let minutes = splits[2].parse::<u16>().unwrap();
         hours * 60 + minutes
     } else {
-        splits[0].parse::<u8>().unwrap()
+        splits[0].parse::<u16>().unwrap()
     }
 }
 
