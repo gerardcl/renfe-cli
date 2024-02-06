@@ -174,7 +174,7 @@ $ python -m venv venv
 $ . venv/bin/activate
 $ pip install -U pip
 $ pip install -U maturin
-$ maturing develop
+$ maturin develop
 🔗 Found pyo3 bindings with abi3 support for Python ≥ 3.7
 🐍 Not using a specific python interpreter
 📡 Using build options features from pyproject.toml

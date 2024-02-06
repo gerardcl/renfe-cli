@@ -1,5 +1,9 @@
 # Changelog
 
+## v4.2.1 (2024-02-02)
+
+* Fix navigation with proper date handling [#184](https://github.com/gerardcl/renfe-cli/issues/187)
+
 ## v4.2.0 (2023-11-26)
 
 * Check input stations to match and use existing [#181](https://github.com/gerardcl/renfe-cli/issues/181)
