@@ -1,8 +1,12 @@
 # Changelog
 
+## v4.3.0 (2024-02-10)
+
+* New feature for sorting timetables [#189](https://github.com/gerardcl/renfe-cli/issues/189)
+
 ## v4.2.1 (2024-02-02)
 
-* Fix navigation with proper date handling [#184](https://github.com/gerardcl/renfe-cli/issues/187)
+* Fix navigation with proper date handling [#187](https://github.com/gerardcl/renfe-cli/issues/187)
 
 ## v4.2.0 (2023-11-26)
 

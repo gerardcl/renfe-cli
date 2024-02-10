@@ -14,7 +14,7 @@ maintainers = [
 description = "Get faster Renfe Spanish Trains timetables in your terminal."
 readme = "README.md"
 license = {file = "LICENSE"}
-keywords = ["timetables", "trains", "renfe", "cli", "rust"]
+keywords = ["timetables", "trains", "renfe", "cli", "rust", "pyo3", "maturin"]
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
