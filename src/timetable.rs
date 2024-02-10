@@ -55,6 +55,17 @@ fn to_renfe_month(month: String) -> String {
     months[month.as_str()].to_owned()
 }
 
+fn get_duration_from_renfe_string(s: &str) -> u16 {
+    let splits: Vec<&str> = s.split(' ').collect();
+    if s.contains('h') {
+        let hours = splits[0].parse::<u16>().unwrap();
+        let minutes = splits[2].parse::<u16>().unwrap();
+        hours * 60 + minutes
+    } else {
+        splits[0].parse::<u16>().unwrap()
+    }
+}
+
 #[pyfunction]
 pub fn search_timetable(
     origin: String,
@@ -63,6 +74,7 @@ pub fn search_timetable(
     month: String,
     year: String,
     wait: u64,
+    sorted: bool,
 ) -> PyResult<Vec<Vec<String>>> {
     println!("loading headless chrome browser");
     let browser = Browser::new(LaunchOptions {
@@ -188,6 +200,13 @@ pub fn search_timetable(
         tracks.push(row);
     }
 
+    if sorted {
+        println!("sorting timetable");
+        tracks.sort_by(|a, b| {
+            get_duration_from_renfe_string(&a[3]).cmp(&get_duration_from_renfe_string(&b[3]))
+        });
+    }
+
     Ok(tracks)
 }
 
@@ -225,6 +244,7 @@ mod tests {
             now.month().to_string(),
             now.year().to_string(),
             15,
+            false,
         )?);
 
         Ok(())

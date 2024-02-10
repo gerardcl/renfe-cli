@@ -36,6 +36,7 @@ pub fn main() -> PyResult<()> {
         .opt_str("w")
         .unwrap_or(2.to_string())
         .parse::<u64>()?;
+    let sorted: bool = matches.opt_present("s");
 
     println!(
         "Today is: {}-{}-{}",
@@ -45,7 +46,7 @@ pub fn main() -> PyResult<()> {
     );
     println!("Searching timetable for date: {}-{}-{}", year, month, day);
 
-    let timetable = search_timetable(origin, destination, day, month, year, wait)?;
+    let timetable = search_timetable(origin, destination, day, month, year, wait, sorted)?;
 
     print_timetable(timetable);
     Ok(())
@@ -92,6 +93,7 @@ fn set_opts() -> Options {
         "Set Wait time in seconds for Renfe search result page (default: 2)",
         "SECONDS",
     );
+    opts.optflag("s", "sort", "Option to sort the timetable by Duration");
     opts.optflag("h", "help", "Print this help menu");
 
     opts

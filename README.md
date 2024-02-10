@@ -32,7 +32,7 @@ The navigation through the site happens in the following steps:
 4. Writes down and selects the month to search for
 5. Writes down and selects the year to search for
 6. Clicks on search button
-7. Parses the HTML data and prints the timetable
+7. Parses the HTML data, optionally sorts the connections and prints the timetable
 
 ```bash
 $ renfe-cli -h
@@ -45,6 +45,7 @@ Options:
     -m, --month MONTH   Set Month to search timetable for (default: today's month)
     -y, --year YEAR     Set Year to search timetable for (default: today's year)
     -w, --wait SECONDS  Set Wait time in seconds for Renfe search result page (default: 2)
+    -s, --sort          Option to sort the timetable by Duration
     -h, --help          Print this help menu
 ```
 
