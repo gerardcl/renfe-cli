@@ -1,8 +1,12 @@
 # Changelog
 
+## v4.3.1 (2024-03-30)
+
+* Upgrade PyO3 with general dependencies maintenance [#192](https://github.com/gerardcl/renfe-cli/issues/192)
+
 ## v4.3.0 (2024-02-10)
 
-* New feature for sorting timetables [#189](https://github.com/gerardcl/renfe-cli/issues/189)
+* New feature by @henninggross - Sorting train schedules by duration [#189](https://github.com/gerardcl/renfe-cli/issues/189)
 
 ## v4.2.1 (2024-02-02)
 
