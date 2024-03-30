@@ -1,6 +1,6 @@
 [package]
 name = "renfe-cli"
-version = "4.3.0"
+version = "4.3.1"
 edition = "2021"
 license = "BSD-3-Clause"
 description = "CLI for searching Renfe train timetables in the Spanish country"
@@ -16,9 +16,9 @@ name = "renfe_cli"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = { version = "0.20", features = ["abi3-py37"] }
+pyo3 = { version = "0.21", features = ["abi3-py37"] }
 headless_chrome = { version = "1.0", features = ["fetch"] }
-scraper = "0.18"
+scraper = "0.19"
 ureq = "2.9"
 getopts = "0.2"
 chrono = "0.4"

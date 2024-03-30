@@ -11,7 +11,7 @@ use cli::main;
 /// the `lib.name` setting in the `Cargo.toml`, else Python will not be able to
 /// import the module.
 #[pymodule]
-fn renfe_cli(_py: Python, m: &PyModule) -> PyResult<()> {
+fn renfe_cli(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<Renfe>()?;
     m.add_function(wrap_pyfunction!(search_timetable, m)?)?;
     m.add_function(wrap_pyfunction!(print_timetable, m)?)?;
