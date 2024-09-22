@@ -2,7 +2,6 @@ use pyo3::{
     exceptions::{PyConnectionError, PyValueError},
     pyclass, pymethods, PyResult,
 };
-use scraper::{Html, Selector};
 
 #[pyclass]
 pub struct Renfe {
@@ -14,24 +13,25 @@ impl Renfe {
     #[new]
     pub fn new() -> PyResult<Self> {
         println!("Loading stations from Renfe web");
-        let response = match ureq::get("https://www.renfe.com/content/renfe/es/en/viajar/informacion-util/horarios/app-horarios.html").call() {
-            Ok(response) => { response },
-            Err(_) => { return Err(PyConnectionError::new_err("something wrong")) }
-        };
+        // let response = match ureq::get("https://www.renfe.com/content/renfe/es/en/viajar/informacion-util/horarios/app-horarios.html").call() {
+        //     Ok(response) => { response },
+        //     Err(_) => { return Err(PyConnectionError::new_err("something wrong")) }
+        // };
 
-        let parsed_html = Html::parse_document(&response.into_string().unwrap());
+        // let parsed_html = Html::parse_document(&response.into_string().unwrap());
 
-        let selector = &Selector::parse(r#"#O > option"#).unwrap();
+        // let selector = &Selector::parse(r#"#O > option"#).unwrap();
 
-        let stations: Vec<String> = parsed_html
-            .select(selector)
-            .flat_map(|el| el.text())
-            .map(|t| t.to_string())
-            .collect();
+        // let stations: Vec<String> = parsed_html
+        //     .select(selector)
+        //     .flat_map(|el| el.text())
+        //     .map(|t| t.to_string())
+        //     .collect();
 
-        Ok(Renfe {
-            stations: stations[1..].to_vec(),
-        })
+        // Ok(Renfe {
+        //     stations: stations[1..].to_vec(),
+        // })
+        todo!()
     }
 
     pub fn stations_match(&self, station: String) -> PyResult<Vec<&String>> {

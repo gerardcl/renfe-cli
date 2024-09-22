@@ -1,27 +1,5 @@
-use headless_chrome::{Browser, LaunchOptions};
 use pyo3::{pyfunction, PyResult};
-use scraper::{ElementRef, Html, Selector};
 use std::{collections::HashMap, thread::sleep, time::Duration};
-
-trait VecParser {
-    fn texts_parser(&self, selector: Selector) -> Vec<String>;
-}
-
-impl VecParser for ElementRef<'_> {
-    fn texts_parser(&self, selector: Selector) -> Vec<String> {
-        self.select(&selector)
-            .flat_map(|el| el.text())
-            .map(|t| t.to_string())
-            .map(|x| x.trim().to_string())
-            .filter(|x| !x.is_empty())
-            .collect()
-    }
-}
-
-// Convenience function to avoid unwrap()ing all the time
-fn make_selector(selector: &str) -> Selector {
-    Selector::parse(selector).unwrap()
-}
 
 fn to_renfe_day(day: String) -> String {
     let first_digit: u8 = day.parse::<u8>().unwrap() / 10;
@@ -76,138 +54,139 @@ pub fn search_timetable(
     wait: u64,
     sorted: bool,
 ) -> PyResult<Vec<Vec<String>>> {
-    println!("loading headless chrome browser");
-    let browser = Browser::new(LaunchOptions {
-        headless: true,
-        sandbox: true,
-        enable_gpu: false,
-        enable_logging: false,
-        idle_browser_timeout: Duration::from_secs(30),
-        window_size: Some((1920, 1080)),
-        path: None,
-        user_data_dir: None,
-        port: None,
-        ignore_certificate_errors: true,
-        extensions: Vec::new(),
-        process_envs: None,
-        fetcher_options: Default::default(),
-        args: Vec::new(),
-        disable_default_args: false,
-        proxy_server: None,
-    })
-    .unwrap();
+    // println!("loading headless chrome browser");
+    // let browser = Browser::new(LaunchOptions {
+    //     headless: true,
+    //     sandbox: true,
+    //     enable_gpu: false,
+    //     enable_logging: false,
+    //     idle_browser_timeout: Duration::from_secs(30),
+    //     window_size: Some((1920, 1080)),
+    //     path: None,
+    //     user_data_dir: None,
+    //     port: None,
+    //     ignore_certificate_errors: true,
+    //     extensions: Vec::new(),
+    //     process_envs: None,
+    //     fetcher_options: Default::default(),
+    //     args: Vec::new(),
+    //     disable_default_args: false,
+    //     proxy_server: None,
+    // })
+    // .unwrap();
 
-    let tab = browser.new_tab().unwrap();
-    tab.set_default_timeout(Duration::from_secs(wait));
+    // let tab = browser.new_tab().unwrap();
+    // tab.set_default_timeout(Duration::from_secs(wait));
 
-    println!("navigating to renfe timetable search page");
-    tab.navigate_to("https://www.renfe.com/es/es/viajar/informacion-util/horarios")
-        .unwrap()
-        .wait_until_navigated()
-        .unwrap();
-
-    println!("waiting for search page");
-    tab.wait_until_navigated()
-        .unwrap()
-        .wait_for_elements_by_xpath(r#"//*[@id="O"]"#)
-        .unwrap();
-
-    // let _jpeg_data = tab
-    //     .capture_screenshot(Page::CaptureScreenshotFormatOption::Jpeg, None, None, true)
+    // println!("navigating to renfe timetable search page");
+    // tab.navigate_to("https://www.renfe.com/es/es/viajar/informacion-util/horarios")
+    //     .unwrap()
+    //     .wait_until_navigated()
     //     .unwrap();
-    // std::fs::write("./screenshot1.jpg", _jpeg_data)?;
 
-    println!("adding origin station");
-    tab.find_element_by_xpath(r#"//*[@id="O"]"#)
-        .unwrap()
-        .type_into(&origin)
-        .unwrap();
+    // println!("waiting for search page");
+    // tab.wait_until_navigated()
+    //     .unwrap()
+    //     .wait_for_elements_by_xpath(r#"//*[@id="O"]"#)
+    //     .unwrap();
 
-    println!("adding destination station");
-    tab.find_element_by_xpath(r#"//*[@id="D"]"#)
-        .unwrap()
-        .type_into(&destination)
-        .unwrap();
+    // // let _jpeg_data = tab
+    // //     .capture_screenshot(Page::CaptureScreenshotFormatOption::Jpeg, None, None, true)
+    // //     .unwrap();
+    // // std::fs::write("./screenshot1.jpg", _jpeg_data)?;
 
-    println!("adding day");
-    tab.find_element_by_xpath(r#"//*[@id="DF"]"#)
-        .unwrap()
-        .type_into(&to_renfe_day(day))
-        .unwrap();
+    // println!("adding origin station");
+    // tab.find_element_by_xpath(r#"//*[@id="O"]"#)
+    //     .unwrap()
+    //     .type_into(&origin)
+    //     .unwrap();
 
-    println!("adding month");
-    tab.find_element_by_xpath(r#"//*[@id="MF"]"#)
-        .unwrap()
-        .type_into(&to_renfe_month(month))
-        .unwrap();
+    // println!("adding destination station");
+    // tab.find_element_by_xpath(r#"//*[@id="D"]"#)
+    //     .unwrap()
+    //     .type_into(&destination)
+    //     .unwrap();
 
-    println!("adding year");
-    tab.find_element_by_xpath(r#"//*[@id="AF"]"#)
-        .unwrap()
-        .type_into(&year)
-        .unwrap();
+    // println!("adding day");
+    // tab.find_element_by_xpath(r#"//*[@id="DF"]"#)
+    //     .unwrap()
+    //     .type_into(&to_renfe_day(day))
+    //     .unwrap();
 
-    println!("searching timetable");
+    // println!("adding month");
+    // tab.find_element_by_xpath(r#"//*[@id="MF"]"#)
+    //     .unwrap()
+    //     .type_into(&to_renfe_month(month))
+    //     .unwrap();
 
-    tab.find_element_by_xpath(r#"//*[@id="seleccion"]/fieldset/div[3]/button"#)
-        .unwrap()
-        .click()
-        .unwrap();
+    // println!("adding year");
+    // tab.find_element_by_xpath(r#"//*[@id="AF"]"#)
+    //     .unwrap()
+    //     .type_into(&year)
+    //     .unwrap();
 
-    // wait on navigating and prepare search in result page
-    let html = tab.wait_until_navigated().unwrap();
-    println!("got timetable page");
+    // println!("searching timetable");
 
-    println!("wait for timetable iframe");
-    sleep(Duration::from_secs(wait));
+    // tab.find_element_by_xpath(r#"//*[@id="seleccion"]/fieldset/div[3]/button"#)
+    //     .unwrap()
+    //     .click()
+    //     .unwrap();
 
-    let table_content = html
-        .wait_for_elements_by_xpath(r#"//*[@id="contenedor"]"#)
-        .unwrap()
-        .first()
-        .unwrap()
-        .get_content()
-        .unwrap();
+    // // wait on navigating and prepare search in result page
+    // let html = tab.wait_until_navigated().unwrap();
+    // println!("got timetable page");
 
-    println!("loading timetable");
+    // println!("wait for timetable iframe");
+    // sleep(Duration::from_secs(wait));
 
-    let parsed_html = Html::parse_document(&table_content);
+    // let table_content = html
+    //     .wait_for_elements_by_xpath(r#"//*[@id="contenedor"]"#)
+    //     .unwrap()
+    //     .first()
+    //     .unwrap()
+    //     .get_content()
+    //     .unwrap();
 
-    let resum_selector = make_selector(r#"tr.odd"#);
-    let total_tracks = parsed_html.select(&resum_selector);
-    // println!("#trajectes: {:?}", &total_tracks.count());
+    // println!("loading timetable");
 
-    let mut tracks: Vec<Vec<String>> = Vec::new();
-    for track in total_tracks {
-        let columns_selector: Selector = make_selector(r#"td"#);
-        let columns = track.texts_parser(columns_selector);
-        let mut row = Vec::<String>::with_capacity(4);
-        for (idx, column) in columns.iter().enumerate() {
-            if idx == 0 {
-                let train = column
-                    .trim_start_matches(char::is_numeric)
-                    .trim()
-                    .to_owned();
-                // println!("#sortida: {:?}", &train);
-                row.push(train);
-            }
-            if (1..4).contains(&idx) {
-                let timing = column.trim().to_owned();
-                // println!("#sortida: {:?}", &timing);
-                row.push(timing);
-            }
-        }
-        tracks.push(row);
-    }
+    // let parsed_html = Html::parse_document(&table_content);
 
-    if sorted {
-        println!("sorting timetable");
-        tracks.sort_by(|a, b| {
-            get_duration_from_renfe_string(&a[3]).cmp(&get_duration_from_renfe_string(&b[3]))
-        });
-    }
+    // let resum_selector = make_selector(r#"tr.odd"#);
+    // let total_tracks = parsed_html.select(&resum_selector);
+    // // println!("#trajectes: {:?}", &total_tracks.count());
 
-    Ok(tracks)
+    // let mut tracks: Vec<Vec<String>> = Vec::new();
+    // for track in total_tracks {
+    //     let columns_selector: Selector = make_selector(r#"td"#);
+    //     let columns = track.texts_parser(columns_selector);
+    //     let mut row = Vec::<String>::with_capacity(4);
+    //     for (idx, column) in columns.iter().enumerate() {
+    //         if idx == 0 {
+    //             let train = column
+    //                 .trim_start_matches(char::is_numeric)
+    //                 .trim()
+    //                 .to_owned();
+    //             // println!("#sortida: {:?}", &train);
+    //             row.push(train);
+    //         }
+    //         if (1..4).contains(&idx) {
+    //             let timing = column.trim().to_owned();
+    //             // println!("#sortida: {:?}", &timing);
+    //             row.push(timing);
+    //         }
+    //     }
+    //     tracks.push(row);
+    // }
+
+    // if sorted {
+    //     println!("sorting timetable");
+    //     tracks.sort_by(|a, b| {
+    //         get_duration_from_renfe_string(&a[3]).cmp(&get_duration_from_renfe_string(&b[3]))
+    //     });
+    // }
+
+    // Ok(tracks)
+    todo!()
 }
 
 #[pyfunction]

@@ -16,9 +16,7 @@ name = "renfe_cli"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = { version = "0.21", features = ["abi3-py37"] }
-headless_chrome = { version = "1.0", features = ["fetch"] }
-scraper = "0.19"
-ureq = "2.9"
+pyo3 = { version = "0.22", features = ["abi3-py37"] }
 getopts = "0.2"
 chrono = "0.4"
+gtfs-structures = "0.41"
