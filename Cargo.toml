@@ -1,6 +1,6 @@
 [package]
 name = "renfe-cli"
-version = "4.3.2"
+version = "5.0.0"
 edition = "2021"
 license = "BSD-3-Clause"
 description = "CLI for searching Renfe train timetables in the Spanish country"

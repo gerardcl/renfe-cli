@@ -1016,7 +1016,7 @@ checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 
 [[package]]
 name = "renfe-cli"
-version = "4.3.2"
+version = "5.0.0"
 dependencies = [
  "chrono",
  "getopts",

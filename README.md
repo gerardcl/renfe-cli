@@ -170,8 +170,8 @@ Example of first time working with this repository:
 
 ```bash
 $ git clone https://github.com/gerardcl/renfe-cli.git && cd renfe-cli
-$ python -m venv venv
-$ . venv/bin/activate
+$ python -m venv .venv
+$ . .venv/bin/activate
 $ pip install -U pip
 $ pip install -U maturin
 $ maturin develop

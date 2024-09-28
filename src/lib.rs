@@ -1,9 +1,7 @@
 use pyo3::prelude::*;
 
-mod stations;
-use stations::Renfe;
-mod timetable;
-use timetable::{print_timetable, search_timetable};
+mod renfe;
+use renfe::Renfe;
 mod cli;
 use cli::main;
 
@@ -13,8 +11,6 @@ use cli::main;
 #[pymodule]
 fn renfe_cli(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<Renfe>()?;
-    m.add_function(wrap_pyfunction!(search_timetable, m)?)?;
-    m.add_function(wrap_pyfunction!(print_timetable, m)?)?;
     m.add_function(wrap_pyfunction!(main, m)?)?;
 
     Ok(())
