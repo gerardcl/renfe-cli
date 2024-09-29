@@ -1,7 +1,7 @@
 use pyo3::prelude::*;
 
 mod renfe;
-use renfe::Renfe;
+use renfe::{Renfe, Schedule, Station};
 mod cli;
 use cli::main;
 
@@ -11,6 +11,8 @@ use cli::main;
 #[pymodule]
 fn renfe_cli(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_class::<Renfe>()?;
+    m.add_class::<Station>()?;
+    m.add_class::<Schedule>()?;
     m.add_function(wrap_pyfunction!(main, m)?)?;
 
     Ok(())

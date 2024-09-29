@@ -12,11 +12,19 @@ pub struct Renfe {
 #[pyclass]
 pub struct Schedule {
     train_type: String,
-    origin_stop_name: String,
-    destination_stop_name: String,
+    // origin_stop_name: String,
+    // destination_stop_name: String,
     departure_time: NaiveTime,
     arrival_time: NaiveTime,
     duration: TimeDelta,
+}
+
+// Struct to hold the station name and ID
+#[pyclass]
+#[derive(Debug, Clone)]
+pub struct Station {
+    pub name: String,
+    pub id: String,
 }
 
 #[pymethods]
@@ -37,8 +45,21 @@ impl Renfe {
         })
     }
 
-    pub fn stations_match(&self, station: String) -> PyResult<Vec<(String, String)>> {
-        let found: Vec<(String, String)> = self
+    pub fn all_stations(&self) -> PyResult<Vec<Station>> {
+        let stations: Vec<Station> = self
+            .gtfs
+            .stops
+            .iter()
+            .map(|s| Station {
+                name: s.1.name.clone().unwrap(),
+                id: s.1.id.clone(),
+            })
+            .collect();
+        Ok(stations)
+    }
+
+    pub fn stations_match(&self, station: String) -> PyResult<Vec<Station>> {
+        let found: Vec<Station> = self
             .gtfs
             .stops
             .iter()
@@ -49,17 +70,20 @@ impl Renfe {
                     .to_lowercase()
                     .contains(&station.to_lowercase())
             })
-            .map(|s| (s.1.name.clone().unwrap(), s.1.id.clone()))
+            .map(|s| Station {
+                name: s.1.name.clone().unwrap(),
+                id: s.1.id.clone(),
+            })
             .collect();
         Ok(found)
     }
 
-    pub fn filter_station(&self, station: String) -> PyResult<(String, String)> {
+    pub fn filter_station(&self, station: String) -> PyResult<Station> {
         match self.stations_match(station.clone()) {
             Ok(v) if v.len() == 1 => {
                 println!(
                     "Provided input '{}' does a match with '{}'",
-                    station, v[0].0
+                    station, v[0].name
                 );
                 Ok(v[0].clone())
             }
@@ -132,11 +156,11 @@ impl Renfe {
                                 .short_name
                                 .clone()
                                 .unwrap(),
-                            origin_stop_name: gtfs.stops[&origin.stop.id].name.clone().unwrap(),
-                            destination_stop_name: gtfs.stops[&destination.stop.id]
-                                .name
-                                .clone()
-                                .unwrap(),
+                            // origin_stop_name: gtfs.stops[&origin.stop.id].name.clone().unwrap(),
+                            // destination_stop_name: gtfs.stops[&destination.stop.id]
+                            //     .name
+                            //     .clone()
+                            //     .unwrap(),
                             departure_time,
                             arrival_time,
                             duration,
@@ -160,7 +184,7 @@ impl Renfe {
     }
 
     pub fn print_timetable(&self) {
-        if self.schedules.len() == 0 {
+        if self.schedules.is_empty() {
             println!("\nNo schedules available...won't print timetable.");
         } else {
             println!("\n=========================TIMETABLE=========================");

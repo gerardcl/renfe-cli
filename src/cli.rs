@@ -26,18 +26,19 @@ pub fn main() -> PyResult<()> {
 
     let mut renfe = Renfe::new()?;
 
-    let origin = renfe.filter_station(matches.opt_str("f").unwrap_or("".to_owned()))?;
-    let destination = renfe.filter_station(matches.opt_str("t").unwrap_or("".to_owned()))?;
+    let origin = renfe.filter_station(matches.opt_str("f").expect("Missing origin station"))?;
+    let destination =
+        renfe.filter_station(matches.opt_str("t").expect("Missing destination station"))?;
     let day = match matches.opt_str("d") {
-        Some(day) => day.parse().unwrap(),
+        Some(day) => day.parse()?,
         None => now.day(),
     };
     let month = match matches.opt_str("m") {
-        Some(day) => day.parse().unwrap(),
+        Some(day) => day.parse()?,
         None => now.month(),
     };
     let year = match matches.opt_str("y") {
-        Some(day) => day.parse().unwrap(),
+        Some(day) => day.parse()?,
         None => now.year(),
     };
     let sorted: bool = matches.opt_present("s");
@@ -45,10 +46,10 @@ pub fn main() -> PyResult<()> {
     println!("Today is: {}-{}-{}", now.year(), now.month(), now.day());
     println!("Searching timetable for date: {}-{}-{}", year, month, day);
 
-    renfe.set_train_schedules(&origin.1, &destination.1, day, month, year, sorted)?;
+    renfe.set_train_schedules(&origin.id, &destination.id, day, month, year, sorted)?;
 
-    println!("Origin station: {}", origin.0);
-    println!("Destination station: {}", destination.0);
+    println!("Origin station: {}", origin.name);
+    println!("Destination station: {}", destination.name);
 
     renfe.print_timetable();
 
