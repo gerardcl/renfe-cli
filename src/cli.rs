@@ -65,24 +65,14 @@ fn set_opts() -> Options {
     let mut opts = Options::new();
     opts.optopt("f", "", "Set From origin station", "ORIGIN");
     opts.optopt("t", "", "Set To destination station", "DESTINATION");
-    opts.optopt(
-        "d",
-        "day",
-        "Set Day to search timetable for (default: today)",
-        "DAY",
-    );
+    opts.optopt("d", "day", "Set the Day (default: today's day)", "DAY");
     opts.optopt(
         "m",
         "month",
-        "Set Month to search timetable for (default: today's month)",
+        "Set the Month (default: today's month)",
         "MONTH",
     );
-    opts.optopt(
-        "y",
-        "year",
-        "Set Year to search timetable for (default: today's year)",
-        "YEAR",
-    );
+    opts.optopt("y", "year", "Set the Year (default: today's year)", "YEAR");
     opts.optflag("s", "sort", "Option to sort the timetable by Duration");
     opts.optflag("h", "help", "Print this help menu");
 

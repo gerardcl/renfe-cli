@@ -1,3 +1,5 @@
+use std::io::Read;
+
 use chrono::{Datelike, NaiveDate, NaiveTime, TimeDelta, Timelike};
 use gtfs_structures::Gtfs;
 use pyo3::{exceptions::PyValueError, pyclass, pymethods, PyResult};
@@ -32,11 +34,16 @@ impl Renfe {
     #[new]
     pub fn new() -> PyResult<Self> {
         println!("Loading GTFS data from Renfe web");
-        let gtfs_zip_path = "./google_transit.zip"; // path to the GTFS zip file
 
-        let gtfs = Gtfs::from_path(gtfs_zip_path) // from_url("https://ssl.renfe.com/gtransit/Fichero_AV_LD/google_transit.zip")
-            .expect("Error parsing GTFS zip");
+        let mut res = reqwest::blocking::get(
+            "https://ssl.renfe.com/gtransit/Fichero_AV_LD/google_transit.zip",
+        )
+        .expect("Error downloading GTFS zip file");
+        let mut body = Vec::new();
+        res.read_to_end(&mut body)?;
+        let cursor = std::io::Cursor::new(body);
 
+        let gtfs = Gtfs::from_reader(cursor).expect("Error parsing GTFS zip");
         // gtfs.print_stats();
 
         Ok(Renfe {
@@ -82,8 +89,8 @@ impl Renfe {
         match self.stations_match(station.clone()) {
             Ok(v) if v.len() == 1 => {
                 println!(
-                    "Provided input '{}' does a match with '{}'",
-                    station, v[0].name
+                    "Provided input '{}' does a match with '{:?}'",
+                    station, v[0]
                 );
                 Ok(v[0].clone())
             }
