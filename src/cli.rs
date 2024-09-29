@@ -35,7 +35,7 @@ pub fn main() -> PyResult<()> {
     let month = match matches.opt_str("m") {
         Some(day) => day.parse().unwrap(),
         None => now.month(),
-    };    
+    };
     let year = match matches.opt_str("y") {
         Some(day) => day.parse().unwrap(),
         None => now.year(),
@@ -47,14 +47,8 @@ pub fn main() -> PyResult<()> {
 
     renfe.set_train_schedules(&origin.1, &destination.1, day, month, year, sorted)?;
 
-    println!(
-        "Origin station: {}",
-        origin.0
-    );
-    println!(
-        "Destination station: {}",
-        destination.0
-    );
+    println!("Origin station: {}", origin.0);
+    println!("Destination station: {}", destination.0);
 
     renfe.print_timetable();
 

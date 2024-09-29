@@ -42,7 +42,13 @@ impl Renfe {
             .gtfs
             .stops
             .iter()
-            .filter(|s| s.1.name.clone().unwrap().contains(&station))
+            .filter(|s| {
+                s.1.name
+                    .clone()
+                    .unwrap()
+                    .to_lowercase()
+                    .contains(&station.to_lowercase())
+            })
             .map(|s| (s.1.name.clone().unwrap(), s.1.id.clone()))
             .collect();
         Ok(found)
@@ -52,13 +58,13 @@ impl Renfe {
         match self.stations_match(station.clone()) {
             Ok(v) if v.len() == 1 => {
                 println!(
-                    "Provided input '{}' station matches with '{}'...continue",
+                    "Provided input '{}' does a match with '{}'",
                     station, v[0].0
                 );
                 Ok(v[0].clone())
             }
             Ok(v) => Err(PyValueError::new_err(format!(
-                "Provided input '{station}' station does not match one '{v:?}'"
+                "Provided input '{station}' does match with '{v:?}' -> There must be ONLY one match"
             ))),
             Err(e) => Err(e),
         }
@@ -75,7 +81,15 @@ impl Renfe {
         sorted: bool,
     ) -> PyResult<()> {
         let gtfs = &self.gtfs;
-        let date = NaiveDate::from_ymd_opt(year, month, day).unwrap(); // the date for which schedules are needed
+        // the date for which schedules are needed
+        let date = match NaiveDate::from_ymd_opt(year, month, day) {
+            Some(date) => date,
+            None => {
+                return Err(PyValueError::new_err(format!(
+                    "Provided date '{year}-{month}-{day}' does not exist"
+                )))
+            }
+        };
 
         let mut schedules = Vec::new();
 
@@ -146,34 +160,38 @@ impl Renfe {
     }
 
     pub fn print_timetable(&self) {
-        println!("=========================TIMETABLE=========================");
-        println!(
-            "{0: <12} |   {1: <10} |   {2: <10} |   {3: <12}",
-            "Train", "Departure", "Arrival", "Duration"
-        );
-        for track in &self.schedules {
-            println!("-----------------------------------------------------------");
+        if self.schedules.len() == 0 {
+            println!("\nNo schedules available...won't print timetable.");
+        } else {
+            println!("\n=========================TIMETABLE=========================");
             println!(
-                "{0: <12} |    {1: <9} |    {2: <9} |    {3: <10}",
-                track.train_type,
-                format!(
-                    "{:02}:{:02}",
-                    track.departure_time.hour(),
-                    track.departure_time.minute() % 60
-                ),
-                format!(
-                    "{:02}:{:02}",
-                    track.arrival_time.hour(),
-                    track.arrival_time.minute() % 60
-                ),
-                format!(
-                    "{:02}:{:02}",
-                    track.duration.num_hours(),
-                    track.duration.num_minutes() % 60
-                )
+                "  {0: <12} |   {1: <10} |   {2: <10} |   {3: <12}",
+                "Train", "Departure", "Arrival", "Duration"
             );
+            for track in &self.schedules {
+                println!("-----------------------------------------------------------");
+                println!(
+                    "   {0: <11} |    {1: <9} |    {2: <9} |    {3: <10}",
+                    track.train_type,
+                    format!(
+                        "{:02}:{:02}",
+                        track.departure_time.hour(),
+                        track.departure_time.minute() % 60
+                    ),
+                    format!(
+                        "{:02}:{:02}",
+                        track.arrival_time.hour(),
+                        track.arrival_time.minute() % 60
+                    ),
+                    format!(
+                        "{:02}:{:02}",
+                        track.duration.num_hours(),
+                        track.duration.num_minutes() % 60
+                    )
+                );
+            }
+            println!("===========================================================");
         }
-        println!("===========================================================");
     }
 }
 
@@ -192,6 +210,15 @@ fn is_service_active(gtfs: &Gtfs, service_id: &str, date: NaiveDate) -> bool {
         };
 
         if weekday && date >= calendar.start_date && date <= calendar.end_date {
+            // this should never happen - but a check is for free
+            if let Some(calendar_dates) = gtfs.calendar_dates.get(service_id) {
+                for date_override in calendar_dates {
+                    if date_override.date == date {
+                        return !(date_override.exception_type
+                            == gtfs_structures::Exception::Deleted);
+                    }
+                }
+            }
             return true;
         }
     }
