@@ -1,5 +1,15 @@
 # Changelog
 
+## v5.0.0 (2024-09-29)
+
+* Major refactor using GTFS data from Renfe online datasets. No more scrapping required
+  * [#194](https://github.com/gerardcl/renfe-cli/issues/194)
+  * [#198](https://github.com/gerardcl/renfe-cli/issues/198)
+
+## v4.3.2 (2024-04-21)
+
+* General dependencies maintenance with rustls focus [#196](https://github.com/gerardcl/renfe-cli/issues/196)
+
 ## v4.3.1 (2024-03-30)
 
 * Upgrade PyO3 with general dependencies maintenance [#192](https://github.com/gerardcl/renfe-cli/issues/192)

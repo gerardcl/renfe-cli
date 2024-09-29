@@ -12,7 +12,7 @@ on:
     tags:
       - '*'
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
   workflow_dispatch:
 
 permissions:

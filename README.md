@@ -11,6 +11,8 @@ See the [changelog](https://github.com/gerardcl/renfe-cli/blob/master/CHANGELOG.
 
 **NOTE** since I am more often using Rodalies trains I have created [rodalies-cli](https://github.com/gerardcl/rodalies-cli). I hope you like it too!
 
+  **DISCLAIMER**: Renfe's GTFS dataset might not be in sync with autonomic train schedules (e.g. Rodalies de la Generalitat de Catalunya), hence Renfe Cercanias train types (e.g.: REGIONAL or MD type) might not be accurate. For that, please use autonomic data/apps (.e.g: [rodalies-cli](https://github.com/gerardcl/rodalies-cli)).
+
 ## Installation
 
 Install Python CLI package [renfe-cli](https://pypi.org/project/renfe-cli/)
@@ -21,18 +23,7 @@ pip install renfe-cli --upgrade
 
 ## Usage (CLI)
 
-This CLI behaves as a person/bot going through the official renfe.com search site, using headless chrome browser.
-If the headless chrome browser is not found it will be downloaded.
-
-The navigation through the site happens in the following steps:
-
-1. Writes down and selects origin station
-2. Writes down and selects destination station
-3. Writes down and selects the day to search for
-4. Writes down and selects the month to search for
-5. Writes down and selects the year to search for
-6. Clicks on search button
-7. Parses the HTML data, optionally sorts the connections and prints the timetable
+The CLI uses the official and latest Renfe's GTFS dataset, from [Horarios de alta velocidad, larga distancia y media distancia](https://data.renfe.com/dataset/horarios-de-alta-velocidad-larga-distancia-y-media-distancia).
 
 ```bash
 $ renfe-cli -h
@@ -41,10 +32,9 @@ Usage: renfe-cli [options]
 Options:
     -f ORIGIN           Set From origin station
     -t DESTINATION      Set To destination station
-    -d, --day DAY       Set Day to search timetable for (default: today)
-    -m, --month MONTH   Set Month to search timetable for (default: today's month)
-    -y, --year YEAR     Set Year to search timetable for (default: today's year)
-    -w, --wait SECONDS  Set Wait time in seconds for Renfe search result page (default: 2)
+    -d, --day DAY       Set the Day (default: today's day)
+    -m, --month MONTH   Set the Month (default: today's month)
+    -y, --year YEAR     Set the Year (default: today's year)
     -s, --sort          Option to sort the timetable by Duration
     -h, --help          Print this help menu
 ```
@@ -54,83 +44,29 @@ Options:
 Let's show an example of minimal inputs (origin and destination stations) with specific date:
 
 ```bash
-$ renfe-cli -f Barc -t Mad -d 27
-Loading stations from Renfe web
-Provided input 'Barc' station matches with 'Barcelona (ALL) '...continue
-Provided input 'Mad' station matches with 'Madrid (ALL) '...continue
-Today is: 2023-11-26
-Searching timetable for date: 2023-11-27
-loading headless chrome browser
-navigating to renfe timetable search page
-waiting for search page
-adding origin station
-adding destination station
-adding day
-adding month
-adding year
-searching timetable
-got timetable page
-loading timetable
+$ renfe-cli  -f girona -t "puerta de atocha" -d 30
+Loading GTFS data from Renfe web
+Provided input 'girona' does a match with 'Estación de tren Girona'
+Provided input 'puerta de atocha' does a match with 'Estación de tren Madrid-Puerta de Atocha'
+Today is: 2024-9-29
+Searching timetable for date: 2024-9-30
+Origin station: Estación de tren Girona
+Destination station: Estación de tren Madrid-Puerta de Atocha
+
 =========================TIMETABLE=========================
-Train        |   Departure  |   Arrival    | Duration
+  Train        |   Departure  |   Arrival    |   Duration
 -----------------------------------------------------------
-AVE          |    05.50     |    09.10     | 3 h. 20 min.
+   AVLO        |    05:46     |    09:20     |    03:34
 -----------------------------------------------------------
-AVE          |    06.20     |    08.50     | 2 h. 30 min.
+   AVE         |    06:41     |    10:10     |    03:29
 -----------------------------------------------------------
-AVLO         |    06.35     |    09.20     | 2 h. 45 min.
+   AVE         |    08:11     |    11:45     |    03:34
 -----------------------------------------------------------
-AVE          |    07.00     |    09.30     | 2 h. 30 min.
+   AVE INT     |    11:59     |    15:45     |    03:46
 -----------------------------------------------------------
-AVE          |    07.40     |    10.10     | 2 h. 30 min.
+   AVE         |    15:11     |    19:12     |    04:01
 -----------------------------------------------------------
-LD-AVE       |    07.45     |    15.35     | 7 h. 50 min.
------------------------------------------------------------
-AVE          |    08.00     |    11.12     | 3 h. 12 min.
------------------------------------------------------------
-AVE          |    08.25     |    10.55     | 2 h. 30 min.
------------------------------------------------------------
-REG.EXP.     |    08.43     |    18.09     | 9 h. 26 min.
------------------------------------------------------------
-AVE          |    09.00     |    11.45     | 2 h. 45 min.
------------------------------------------------------------
-AVLO         |    10.00     |    13.17     | 3 h. 17 min.
------------------------------------------------------------
-AVE          |    11.00     |    13.45     | 2 h. 45 min.
------------------------------------------------------------
-AVE          |    12.00     |    15.12     | 3 h. 12 min.
------------------------------------------------------------
-AVE INT      |    12.50     |    15.45     | 2 h. 55 min.
------------------------------------------------------------
-AVE          |    13.25     |    15.54     | 2 h. 29 min.
------------------------------------------------------------
-AVE          |    14.00     |    17.12     | 3 h. 12 min.
------------------------------------------------------------
-AVLO         |    15.00     |    17.45     | 2 h. 45 min.
------------------------------------------------------------
-AVE          |    15.25     |    17.55     | 2 h. 30 min.
------------------------------------------------------------
-AVE          |    16.00     |    19.12     | 3 h. 12 min.
------------------------------------------------------------
-AVE          |    16.25     |    18.55     | 2 h. 30 min.
------------------------------------------------------------
-AVE          |    17.00     |    19.45     | 2 h. 45 min.
------------------------------------------------------------
-AVE          |    17.25     |    19.55     | 2 h. 30 min.
------------------------------------------------------------
-AVE          |    18.00     |    21.12     | 3 h. 12 min.
------------------------------------------------------------
-AVE          |    18.25     |    20.55     | 2 h. 30 min.
------------------------------------------------------------
-AVE          |    18.40     |    21.45     | 3 h. 5 min.
------------------------------------------------------------
-AVE          |    19.25     |    21.55     | 2 h. 30 min.
------------------------------------------------------------
-AVE          |    20.00     |    23.12     | 3 h. 12 min.
------------------------------------------------------------
-AVLO         |    21.00     |    23.45     | 2 h. 45 min.
------------------------------------------------------------
-AVE          |    21.25     |    23.55     | 2 h. 30 min.
+   AVE         |    17:51     |    21:45     |    03:54
 ===========================================================
 ```
 
@@ -140,25 +76,49 @@ AVE          |    21.25     |    23.55     | 2 h. 30 min.
 
 ```bash
 $ python
-Python 3.8.18 (default, Aug 25 2023, 13:20:30)
-[GCC 11.4.0] on linux
+Python 3.12.6 (main, Sep  8 2024, 13:18:56) [GCC 14.2.1 20240805] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import renfe_cli
 >>> renfe = renfe_cli.
-renfe_cli.Renfe(             renfe_cli.main(              renfe_cli.print_timetable(   renfe_cli.renfe_cli          renfe_cli.search_timetable(
+renfe_cli.Renfe()    renfe_cli.Schedule(  renfe_cli.Station(   renfe_cli.main()     renfe_cli.renfe_cli  
 >>> renfe = renfe_cli.Renfe()
-Loading stations from Renfe web
->>> renfe.
-renfe.filter_station(  renfe.stations_match(
->>> renfe.stations_match("Bar")
-['Barcelona (ALL) ', 'Padrón-Barbanza']
+Loading GTFS data from Renfe web
+>>> renfe.filter_station("madrid")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ValueError: Provided input 'madrid' does match with '[Station { name: "Estación de tren Madrid-Puerta de Atocha", id: "60000" }, Station { name: "Estación de tren Madrid - Atocha Cercanias", id: "18000" }, Station { name: "Estación de tren Madrid-Principe Pio", id: "10000" }, Station { name: "Estación de tren Madrid-Ramon Y Cajal", id: "97201" }, Station { name: "Estación de tren Madrid-Nuevos Ministerios", id: "18002" }, Station { name: "Estación de tren Madrid-Chamartin", id: "17000" }, Station { name: "Estación de tren Madrid-Recoletos", id: "18001" }]' -> There must be ONLY one match
+>>> renfe.filter_station("girona")
+Provided input 'girona' does a match with 'Station { name: "Estación de tren Girona", id: "79300" }'
+<builtins.Station object at 0x77f04173d070>
+>>> renfe.print_timetable()
+
+No schedules available...won't print timetable.
+>>> renfe.set_train_schedules("79300", "60000", 30, 9, 2024, False)
+>>> renfe.print_timetable()
+
+=========================TIMETABLE=========================
+  Train        |   Departure  |   Arrival    |   Duration
+-----------------------------------------------------------
+   AVLO        |    05:46     |    09:20     |    03:34
+-----------------------------------------------------------
+   AVE         |    06:41     |    10:10     |    03:29
+-----------------------------------------------------------
+   AVE         |    08:11     |    11:45     |    03:34
+-----------------------------------------------------------
+   AVE INT     |    11:59     |    15:45     |    03:46
+-----------------------------------------------------------
+   AVE         |    15:11     |    19:12     |    04:01
+-----------------------------------------------------------
+   AVE         |    17:51     |    21:45     |    03:54
+===========================================================
+>>> ...
 ```
 
 ---
 
 ## Contribute or Report with Issues
 
-If Renfe's website is changed or you find any issue to be fixed or nice enhancements to have, please: [create an issue](https://github.com/gerardcl/renfe-cli/issues).
+If Renfe's GTFS dataset is being kept not up to date or you find any issue to be fixed or nice enhancements to have, please: [create an issue](https://github.com/gerardcl/renfe-cli/issues).
 
 ### Development
 
@@ -170,8 +130,8 @@ Example of first time working with this repository:
 
 ```bash
 $ git clone https://github.com/gerardcl/renfe-cli.git && cd renfe-cli
-$ python -m venv venv
-$ . venv/bin/activate
+$ python -m venv .venv
+$ . .venv/bin/activate
 $ pip install -U pip
 $ pip install -U maturin
 $ maturin develop
