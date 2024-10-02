@@ -32,11 +32,14 @@ pub struct Station {
 #[pymethods]
 impl Renfe {
     #[new]
-    pub fn new() -> PyResult<Self> {
+    pub fn new(cercanias: bool) -> PyResult<Self> {
         println!("Loading GTFS data from Renfe web");
 
         let mut res = reqwest::blocking::get(
-            "https://ssl.renfe.com/gtransit/Fichero_AV_LD/google_transit.zip",
+            match cercanias {
+                true => "https://ssl.renfe.com/ftransit/Fichero_CER_FOMENTO/fomento_transit.zip",
+                false => "https://ssl.renfe.com/gtransit/Fichero_AV_LD/google_transit.zip",
+            },
         )
         .expect("Error downloading GTFS zip file");
         let mut body = Vec::new();
@@ -44,7 +47,8 @@ impl Renfe {
         let cursor = std::io::Cursor::new(body);
 
         let gtfs = Gtfs::from_reader(cursor).expect("Error parsing GTFS zip");
-        // gtfs.print_stats();
+
+        gtfs.print_stats();
 
         Ok(Renfe {
             gtfs,
@@ -143,18 +147,22 @@ impl Renfe {
                         let time_origin = origin.departure_time.unwrap();
                         let time_destination = destination.arrival_time.unwrap();
                         let departure_time = NaiveTime::from_hms_opt(
-                            time_origin / 3600,
+                            (time_origin / 3600) % 24,
                             time_origin % 3600 / 60,
                             time_origin % 60,
                         )
                         .unwrap();
                         let arrival_time = NaiveTime::from_hms_opt(
-                            time_destination / 3600,
+                            (time_destination / 3600) % 24,
                             time_destination % 3600 / 60,
                             time_destination % 60,
                         )
                         .unwrap();
-                        let duration = arrival_time.signed_duration_since(departure_time);
+
+                        let mut duration = arrival_time.signed_duration_since(departure_time);
+                        if time_destination >= 86400 {
+                            duration = duration.checked_add(&TimeDelta::seconds(86400)).unwrap();
+                        }
 
                         schedules.push(Schedule {
                             train_type: gtfs

@@ -24,7 +24,7 @@ pub fn main() -> PyResult<()> {
         return Ok(());
     }
 
-    let mut renfe = Renfe::new()?;
+    let mut renfe = Renfe::new(matches.opt_present("c"))?;
 
     let origin = renfe.filter_station(matches.opt_str("f").expect("Missing origin station"))?;
     let destination =
@@ -74,6 +74,7 @@ fn set_opts() -> Options {
     );
     opts.optopt("y", "year", "Set the Year (default: today's year)", "YEAR");
     opts.optflag("s", "sort", "Option to sort the timetable by Duration");
+    opts.optflag("c", "cercanias", "Option to search over Renfe Cercanías");
     opts.optflag("h", "help", "Print this help menu");
 
     opts
