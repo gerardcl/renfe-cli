@@ -30,7 +30,6 @@ classifiers = [
     "Operating System :: Microsoft :: Windows",
     "Topic :: Utilities",
     "Topic :: Terminals",
-    "Topic :: Text Processing :: Markup :: HTML",
 ]
 dynamic = ["version"]
 
