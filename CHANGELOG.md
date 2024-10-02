@@ -1,5 +1,9 @@
 # Changelog
 
+## v5.1.0 (2024-10-02)
+
+* Enable Renfe Cercanías GTFS dataset [#200](https://github.com/gerardcl/renfe-cli/issues/200)
+
 ## v5.0.0 (2024-09-29)
 
 * Major refactor using GTFS data from Renfe online datasets. No more scrapping required

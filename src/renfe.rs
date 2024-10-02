@@ -33,12 +33,16 @@ pub struct Station {
 impl Renfe {
     #[new]
     pub fn new(cercanias: bool) -> PyResult<Self> {
-        println!("Loading GTFS data from Renfe web");
-
         let mut res = reqwest::blocking::get(
             match cercanias {
-                true => "https://ssl.renfe.com/ftransit/Fichero_CER_FOMENTO/fomento_transit.zip",
-                false => "https://ssl.renfe.com/gtransit/Fichero_AV_LD/google_transit.zip",
+                false => {
+                    println!("Loading default GTFS data from Renfe web - Alta velocidad, Larga distancia y Media distancia");
+                    "https://ssl.renfe.com/gtransit/Fichero_AV_LD/google_transit.zip"
+                },
+                true => {
+                    println!("Loading Cercanías GTFS data from Renfe web - long load time");
+                    "https://ssl.renfe.com/ftransit/Fichero_CER_FOMENTO/fomento_transit.zip"
+                },
             },
         )
         .expect("Error downloading GTFS zip file");
