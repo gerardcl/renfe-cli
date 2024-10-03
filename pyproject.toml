@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "renfe-cli"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 authors = [
   {name = "Gerard Castillo Lasheras", email = "gerardcl@gmail.com"},
 ]

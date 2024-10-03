@@ -1,8 +1,7 @@
-use std::io::Read;
-
 use chrono::{Datelike, NaiveDate, NaiveTime, TimeDelta, Timelike};
 use gtfs_structures::Gtfs;
 use pyo3::{exceptions::PyValueError, pyclass, pymethods, PyResult};
+use std::io::Read;
 
 #[pyclass]
 pub struct Renfe {

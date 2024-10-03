@@ -2,12 +2,14 @@
 
 # Renfe Timetables CLI
 
-Get faster Renfe trains timetables in your terminal, with Python3.7+ support.
+Get faster Renfe trains timetables in your terminal, with Python3.8+ support.
 No longer need to open the browser! Just keep using your terminal 😀
 
 It supports both [Horarios de alta velocidad, larga distancia y media distancia](https://data.renfe.com/dataset/horarios-de-alta-velocidad-larga-distancia-y-media-distancia) (default option, as in the web) and [Renfe Cercanías](https://data.renfe.com/dataset/horarios-cercanias)  GTFS datasets.
 
 `renfe-cli` is written in [Rust](https://www.rust-lang.org/) (since v4.0.0) and published to [pypi.org](https://pypi.org/project/renfe-cli/) as a Python package (CLI and library).
+
+It is provided as a Python package due to historical reasons, but was ported to Rust to showcase Rust's interoperability and performance improvements that can offer to the Python ecosystem. Nevertheless, one can optionally use the built [renfe-cli](https://crates.io/crates/renfe-cli) crate that is publised to crates.io.
 
 See the [changelog](https://github.com/gerardcl/renfe-cli/blob/master/CHANGELOG.md).
 
@@ -17,10 +19,20 @@ See the [changelog](https://github.com/gerardcl/renfe-cli/blob/master/CHANGELOG.
 
 ## Installation
 
+### Python package
+
 Install Python CLI package [renfe-cli](https://pypi.org/project/renfe-cli/)
 
 ```bash
 pip install renfe-cli --upgrade
+```
+
+### Rust crate (optional)
+
+Install the Rust crate [renfe-cli](https://crates.io/crates/renfe-cli)
+
+```bash
+cargo install renfe-cli
 ```
 
 ## Usage (CLI)

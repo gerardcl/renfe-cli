@@ -1,9 +1,10 @@
+pub mod cli;
+pub mod renfe;
+
 use pyo3::prelude::*;
 
-mod renfe;
-use renfe::{Renfe, Schedule, Station};
-mod cli;
 use cli::main;
+use renfe::{Renfe, Schedule, Station};
 
 /// A Python module implemented in Rust. The name of this function must match
 /// the `lib.name` setting in the `Cargo.toml`, else Python will not be able to
