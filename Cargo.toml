@@ -1,6 +1,6 @@
 [package]
 name = "renfe-cli"
-version = "5.1.0"
+version = "5.2.0"
 edition = "2021"
 authors = ["Gerard C.L. <gerardcl@gmail.com>"]
 license = "BSD-3-Clause"

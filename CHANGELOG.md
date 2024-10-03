@@ -1,5 +1,9 @@
 # Changelog
 
+## v5.2.0 (2024-10-03)
+
+* Publish Rust crate binary via crates.io [#202](https://github.com/gerardcl/renfe-cli/issues/202)
+
 ## v5.1.0 (2024-10-02)
 
 * Enable Renfe Cercanías GTFS dataset [#200](https://github.com/gerardcl/renfe-cli/issues/200)
