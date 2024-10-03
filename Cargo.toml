@@ -8,7 +8,7 @@ description = "CLI for searching Renfe train timetables in the Spanish country"
 readme = "README.md"
 homepage = "https://github.com/gerardcl/renfe-cli"
 repository = "https://github.com/gerardcl/renfe-cli"
-keywords = ["cli", "timetables", "schedules", "trains", "renfe", "spain"]
+keywords = ["cli", "timetables", "trains", "renfe", "spain"]
 categories = ["command-line-utilities"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
