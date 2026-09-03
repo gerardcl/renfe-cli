@@ -5,7 +5,7 @@
 Get faster Renfe trains timetables in your terminal, with Python 3.10+ support.
 No longer need to open the browser! Just keep using your terminal 😀
 
-It supports both [Horarios de alta velocidad, larga distancia y media distancia](https://data.renfe.com/dataset/horarios-de-alta-velocidad-larga-distancia-y-media-distancia) (default option, as in the web) and [Renfe Cercanías](https://data.renfe.com/dataset/horarios-cercanias)  GTFS datasets.
+It supports both [Horarios de alta velocidad, larga distancia y media distancia](https://data.renfe.com/dataset/horarios-de-alta-velocidad-larga-distancia-y-media-distancia) (default option, as in the web) and [Renfe Cercanías](https://data.renfe.com/dataset/horarios-cercanias) GTFS datasets. Timetable searches include connections with up to three transfers. The router favors shorter journeys and applies a transfer penalty so a marginal time saving does not produce an unnecessarily complicated itinerary.
 
 `renfe-cli` is written in [Rust](https://www.rust-lang.org/) (since v4.0.0) and published to [pypi.org](https://pypi.org/project/renfe-cli/) as a Python package (CLI and library).
 
