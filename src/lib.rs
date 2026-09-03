@@ -11,10 +11,10 @@ use renfe::{Renfe, Schedule, Station};
 /// import the module.
 #[pymodule]
 fn renfe_cli(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add_class::<Renfe>()?;
-    m.add_class::<Station>()?;
-    m.add_class::<Schedule>()?;
-    m.add_function(wrap_pyfunction!(main, m)?)?;
+  m.add_class::<Renfe>()?;
+  m.add_class::<Station>()?;
+  m.add_class::<Schedule>()?;
+  m.add_function(wrap_pyfunction!(main, m)?)?;
 
-    Ok(())
+  Ok(())
 }

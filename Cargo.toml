@@ -1,7 +1,8 @@
 [package]
 name = "renfe-cli"
 version = "5.2.0"
-edition = "2021"
+edition = "2024"
+rust-version = "1.98"
 authors = ["Gerard C.L. <gerardcl@gmail.com>"]
 license = "BSD-3-Clause"
 description = "CLI for searching Renfe train timetables in the Spanish country"
@@ -18,8 +19,9 @@ name = "renfe_cli"
 crate-type = ["cdylib", "lib"]
 
 [dependencies]
-pyo3 = { version = "0.22", features = ["abi3-py37"] }
-getopts = "0.2"
-chrono = "0.4"
-gtfs-structures = { version = "0.41", default-features = false }
-reqwest = { version = "0.12", default-features = false, features = ["blocking", "rustls-tls"] }
+pyo3 = { version = "0.29", features = ["abi3-py310"] }
+getopts = "0.2.24"
+chrono = "0.4.45"
+gtfs-structures = { version = "0.50", default-features = false }
+jiff = "0.2.35"
+reqwest = { version = "0.13", default-features = false, features = ["blocking", "rustls"] }

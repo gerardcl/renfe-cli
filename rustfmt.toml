@@ -1,0 +1,24 @@
+# https://github.com/rust-lang/rustfmt/blob/master/Configurations.md
+# ─────────────────────────────────────────────
+# 📦 Edition
+edition = "2024"
+# ─────────────────────────────────────────────
+# 📚 Import organization
+# group_imports = "StdExternalCrate"   # Group: std, external crates, then local
+# imports_granularity = "Module"       # One use per module line (avoids merge conflicts)
+reorder_imports = true               # Ensure deterministic ordering
+# ─────────────────────────────────────────────
+# 📐 Formatting rules
+use_field_init_shorthand = true      # Use shorthand: { foo } instead of { foo: foo }
+match_block_trailing_comma = true    # Add trailing commas in multiline match arms
+# trailing_comma = "Always"            # Always use trailing commas in multiline
+newline_style = "Unix"               # Use \n (LF) for line endings
+tab_spaces = 2                       # Use 2 spaces per indentation level
+max_width = 100                      # Line length limit
+# ─────────────────────────────────────────────
+# 🧼 Style preferences
+# normalize_doc_attributes = true      # Normalize #[doc] to /// comments
+# wrap_comments = true                 # Automatically wrap long doc/comments
+# format_code_in_doc_comments = true   # Format Rust code inside doc comments
+# blank_lines_upper_bound = 1          # Avoid excessive vertical whitespace
+# blank_lines_lower_bound = 0          # Allow compact block spacing when possible

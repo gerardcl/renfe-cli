@@ -2,7 +2,7 @@
 
 # Renfe Timetables CLI
 
-Get faster Renfe trains timetables in your terminal, with Python3.8+ support.
+Get faster Renfe trains timetables in your terminal, with Python 3.10+ support.
 No longer need to open the browser! Just keep using your terminal 😀
 
 It supports both [Horarios de alta velocidad, larga distancia y media distancia](https://data.renfe.com/dataset/horarios-de-alta-velocidad-larga-distancia-y-media-distancia) (default option, as in the web) and [Renfe Cercanías](https://data.renfe.com/dataset/horarios-cercanias)  GTFS datasets.
