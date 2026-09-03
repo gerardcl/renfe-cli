@@ -1,5 +1,6 @@
 pub mod cli;
 pub mod renfe;
+mod router;
 
 use pyo3::prelude::*;
 

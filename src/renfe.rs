@@ -1,8 +1,10 @@
 use chrono::{NaiveTime, TimeDelta, Timelike};
-use gtfs_structures::Gtfs;
+use gtfs_structures::{Gtfs, TransferType};
 use jiff::civil::{Date, Weekday};
 use pyo3::{PyResult, exceptions::PyValueError, pyclass, pymethods};
 use std::io::Read;
+
+use crate::router::{StopTime, Transfer, Trip, find_journeys};
 
 #[pyclass]
 pub struct Renfe {
@@ -14,11 +16,11 @@ pub struct Renfe {
 #[pyclass]
 pub struct Schedule {
   train_type: String,
-  // origin_stop_name: String,
-  // destination_stop_name: String,
+  service_departure: u32,
   departure_time: NaiveTime,
   arrival_time: NaiveTime,
   duration: TimeDelta,
+  transfers: usize,
 }
 
 // Struct to hold the station name and ID
@@ -136,67 +138,75 @@ impl Renfe {
       },
     };
 
-    let mut schedules = Vec::new();
-
-    // Loop through each trip to find ones active on the given date
-    for trip in gtfs.trips.values() {
-      // Check if the trip's service is active on the given date
-      if is_service_active(gtfs, &trip.service_id, date) {
-        // Filter stop times for the trip
-        let stop_times: Vec<_> = trip.stop_times.clone();
-
-        // Find the origin and destination stops in the trip's stop times
-        let origin_stop = stop_times.iter().find(|st| st.stop.id == origin_station_id);
-        let destination_stop = stop_times
+    let trips: Vec<_> = gtfs
+      .trips
+      .values()
+      .filter(|trip| is_service_active(gtfs, &trip.service_id, date))
+      .filter_map(|trip| {
+        let stop_times: Vec<_> = trip
+          .stop_times
           .iter()
-          .find(|st| st.stop.id == destination_station_id);
+          .filter_map(|stop_time| {
+            Some(StopTime {
+              stop_id: stop_time.stop.id.clone(),
+              arrival: stop_time.arrival_time?,
+              departure: stop_time.departure_time?,
+            })
+          })
+          .collect();
+        (stop_times.len() >= 2).then(|| Trip {
+          id: trip.id.clone(),
+          name: gtfs
+            .get_route(&trip.route_id)
+            .ok()
+            .and_then(|route| route.short_name.clone().or_else(|| route.long_name.clone()))
+            .or_else(|| trip.trip_short_name.clone())
+            .unwrap_or_else(|| trip.route_id.clone()),
+          stop_times,
+        })
+      })
+      .collect();
+    let transfers: Vec<_> = gtfs
+      .stops
+      .values()
+      .flat_map(|stop| {
+        stop.transfers.iter().map(|transfer| Transfer {
+          from_stop_id: stop.id.clone(),
+          to_stop_id: transfer.to_stop_id.clone(),
+          duration: (transfer.transfer_type != TransferType::Impossible)
+            .then(|| transfer.min_transfer_time.unwrap_or(5 * 60)),
+        })
+      })
+      .collect();
 
-        // If the trip includes both origin and destination, and origin is before destination
-        if let (Some(origin), Some(destination)) = (origin_stop, destination_stop)
-          && origin.stop_sequence < destination.stop_sequence
-        {
-          let time_origin = origin.departure_time.unwrap();
-          let time_destination = destination.arrival_time.unwrap();
-          let departure_time = NaiveTime::from_hms_opt(
-            (time_origin / 3600) % 24,
-            time_origin % 3600 / 60,
-            time_origin % 60,
-          )
-          .unwrap();
-          let arrival_time = NaiveTime::from_hms_opt(
-            (time_destination / 3600) % 24,
-            time_destination % 3600 / 60,
-            time_destination % 60,
-          )
-          .unwrap();
-
-          let mut duration = arrival_time.signed_duration_since(departure_time);
-          if time_destination >= 86400 {
-            duration = duration.checked_add(&TimeDelta::seconds(86400)).unwrap();
-          }
-
-          schedules.push(Schedule {
-            train_type: gtfs
-              .get_route(&trip.route_id)
-              .unwrap()
-              .short_name
-              .clone()
-              .unwrap(),
-            // origin_stop_name: gtfs.stops[&origin.stop.id].name.clone().unwrap(),
-            // destination_stop_name: gtfs.stops[&destination.stop.id]
-            //     .name
-            //     .clone()
-            //     .unwrap(),
-            departure_time,
-            arrival_time,
-            duration,
-          });
-        }
-      }
-    }
+    let mut schedules: Vec<_> = find_journeys(
+      &trips,
+      &transfers,
+      origin_station_id,
+      destination_station_id,
+    )
+    .into_iter()
+    .filter_map(|journey| {
+      let departure = journey.departure();
+      let arrival = journey.arrival();
+      Some(Schedule {
+        train_type: journey
+          .legs
+          .iter()
+          .map(|leg| leg.name.as_str())
+          .collect::<Vec<_>>()
+          .join(" → "),
+        service_departure: departure,
+        departure_time: seconds_to_time(departure)?,
+        arrival_time: seconds_to_time(arrival)?,
+        duration: TimeDelta::seconds(i64::from(arrival.saturating_sub(departure))),
+        transfers: journey.transfers(),
+      })
+    })
+    .collect();
 
     // Sort schedules by departure_time
-    schedules.sort_by_key(|schedule| schedule.departure_time);
+    schedules.sort_by_key(|schedule| schedule.service_departure);
 
     if sorted {
       println!("sorting timetable by duration");
@@ -212,15 +222,15 @@ impl Renfe {
     if self.schedules.is_empty() {
       println!("\nNo schedules available...won't print timetable.");
     } else {
-      println!("\n=========================TIMETABLE=========================");
+      println!("\n================================TIMETABLE================================");
       println!(
-        "  {0: <12} |   {1: <10} |   {2: <10} |   {3: <12}",
-        "Train", "Departure", "Arrival", "Duration"
+        "  {0: <22} | {1: <9} | {2: <7} | {3: <8} | {4: <9}",
+        "Trains", "Departure", "Arrival", "Duration", "Transfers"
       );
       for track in &self.schedules {
-        println!("-----------------------------------------------------------");
+        println!("-------------------------------------------------------------------------");
         println!(
-          "   {0: <11} |    {1: <9} |    {2: <9} |    {3: <10}",
+          "  {0: <22} |   {1: <7} |  {2: <7} |  {3: <7} |     {4: <4}",
           track.train_type,
           format!(
             "{:02}:{:02}",
@@ -236,12 +246,17 @@ impl Renfe {
             "{:02}:{:02}",
             track.duration.num_hours(),
             track.duration.num_minutes() % 60
-          )
+          ),
+          track.transfers
         );
       }
-      println!("===========================================================");
+      println!("=========================================================================");
     }
   }
+}
+
+fn seconds_to_time(seconds: u32) -> Option<NaiveTime> {
+  NaiveTime::from_hms_opt((seconds / 3600) % 24, seconds % 3600 / 60, seconds % 60)
 }
 
 // Helper function to check if a service is active on a given date
