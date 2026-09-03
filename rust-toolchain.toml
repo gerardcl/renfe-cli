@@ -1,0 +1,7 @@
+[toolchain]
+channel = "1.98.0"
+# https://rust-lang.github.io/rustup/concepts/profiles.html
+profile = "default"
+# Pins the rust-analyzer LSP server to this toolchain so editors (VS Code, Zed, etc.)
+# use the same Rust version for analysis and clippy — not the system default.
+components = ["rustfmt", "clippy", "rust-analyzer"]
