@@ -24,7 +24,7 @@ See the [changelog](https://github.com/gerardcl/renfe-cli/blob/master/CHANGELOG.
 Install Python CLI package [renfe-cli](https://pypi.org/project/renfe-cli/)
 
 ```bash
-pip install renfe-cli --upgrade
+uv tool install renfe-cli --upgrade
 ```
 
 ### Rust crate (optional)
@@ -182,26 +182,17 @@ If Renfe's GTFS dataset is being kept not up to date or you find any issue to be
 
 ### Development
 
-This project makes use of Rust bindings for the Python interpreter thanks to [pyo3](https://pyo3.rs). It is already available as a dependency.
+This project uses Rust bindings for the Python interpreter through [PyO3](https://pyo3.rs) and [Maturin](https://www.maturin.rs/) to build and install the Python package.
 
-To develop, build and publish, this project makes use of [maturin](https://www.maturin.rs/) project. See [usage](https://www.maturin.rs/#usage).
-
-Example of first time working with this repository:
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/) first, then set up a development environment:
 
 ```bash
-$ git clone https://github.com/gerardcl/renfe-cli.git && cd renfe-cli
-$ python -m venv .venv
-$ . .venv/bin/activate
-$ pip install -U pip
-$ pip install -U maturin
-$ maturin develop
-🔗 Found pyo3 bindings with abi3 support for Python ≥ 3.7
-🐍 Not using a specific python interpreter
-📡 Using build options features from pyproject.toml
-   Compiling renfe-cli v5.1.0 (/path/to/renfe-cli)
-    Finished dev [unoptimized + debuginfo] target(s) in 7.07s
-📦 Built wheel for abi3 Python ≥ 3.7 to /tmp/.tmpDsjowL/renfe_cli-5.1.0-cp37-abi3-linux_x86_64.whl
-🛠 Installed renfe-cli-5.1.0
+git clone https://github.com/gerardcl/renfe-cli.git
+cd renfe-cli
+uv python install 3.10
+uv venv --python 3.10
+source .venv/bin/activate
+uvx maturin develop --uv
 ```
 
-Maturin takes care of compiling the rust code, generating the bindings for python and installing the package for local use (as library or binary/CLI).
+Maturin compiles the Rust code, generates the Python bindings, and installs the package into `.venv` for local use as a library or CLI. After changing Rust code, run `uvx maturin develop --uv` again to rebuild it. Use `uv run renfe-cli --help` to run the development installation.
