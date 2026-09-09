@@ -1,5 +1,9 @@
 # Changelog
 
+## v6.0.0 (2026-09-08)
+
+* General maintenance and improvements on GTFS data handling and algorithms [#206](https://github.com/gerardcl/renfe-cli/issues/206)
+
 ## v5.2.0 (2024-10-03)
 
 * Publish Rust crate binary via crates.io [#202](https://github.com/gerardcl/renfe-cli/issues/202)
