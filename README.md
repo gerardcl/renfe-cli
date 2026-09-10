@@ -117,6 +117,22 @@ Destination station: Estación de tren Tres Cantos (apt)
 ===========================================================
 ```
 
+Journeys with connections include the details of every transfer directly
+below the timetable row. The arrival and departure are the times at which the
+transfer starts and ends; the duration is the total time available to change
+trains. Transfers between different stops show both station names:
+
+```text
+      Transfer 1 at Madrid-Chamartín: arrive 10:05, depart 10:20 (00:15)
+      Transfer 2 at Madrid-Atocha → Madrid-Puerta de Atocha: arrive 10:45, depart 11:10 (00:25)
+```
+
+Downloaded feeds are converted to routing data and cached in the operating
+system's user cache directory. On later runs, `renfe-cli` sends Renfe the
+stored HTTP `ETag`; when the feed has not changed, Renfe returns `304 Not
+Modified` and the processed data is loaded directly from the local cache.
+Set `RENFE_CLI_CACHE_DIR` to use a custom cache location.
+
 ## Usage (Library)
 
 `renfe-cli` can be imported as a python package into your project, offering utilities when willing to deal with the Renfe search web site.

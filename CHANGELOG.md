@@ -1,5 +1,10 @@
 # Changelog
 
+## v6.1.0 (2026-09-12)
+
+* Add GTFS data caching [#209](https://github.com/gerardcl/renfe-cli/issues/209)
+* Add transfer infos [#208](https://github.com/gerardcl/renfe-cli/issues/208)
+
 ## v6.0.0 (2026-09-08)
 
 * General maintenance and improvements on GTFS data handling and algorithms [#206](https://github.com/gerardcl/renfe-cli/issues/206)

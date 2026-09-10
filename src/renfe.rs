@@ -1,14 +1,14 @@
 use chrono::{NaiveTime, TimeDelta, Timelike};
-use gtfs_structures::{Gtfs, TransferType};
 use jiff::civil::{Date, Weekday};
-use pyo3::{PyResult, exceptions::PyValueError, pyclass, pymethods};
-use std::io::Read;
+use pyo3::{PyResult, exceptions::PyRuntimeError, exceptions::PyValueError, pyclass, pymethods};
+use std::collections::HashMap;
 
-use crate::router::{StopTime, Transfer, Trip, find_journeys};
+use crate::cache::{Feed, ServiceCalendar, ServiceCalendarDate, TransitData};
+use crate::router::{Journey, Trip, find_journeys};
 
 #[pyclass]
 pub struct Renfe {
-  gtfs: Gtfs,
+  data: TransitData,
   schedules: Vec<Schedule>,
 }
 
@@ -20,7 +20,15 @@ pub struct Schedule {
   departure_time: NaiveTime,
   arrival_time: NaiveTime,
   duration: TimeDelta,
-  transfers: usize,
+  transfers: Vec<ScheduleTransfer>,
+}
+
+#[derive(Debug, PartialEq, Eq)]
+struct ScheduleTransfer {
+  location: String,
+  arrival_time: NaiveTime,
+  departure_time: NaiveTime,
+  duration: TimeDelta,
 }
 
 // Struct to hold the station name and ID
@@ -35,41 +43,27 @@ pub struct Station {
 impl Renfe {
   #[new]
   pub fn new(cercanias: bool) -> PyResult<Self> {
-    let mut res = reqwest::blocking::get(
-            match cercanias {
-                false => {
-                    println!("Loading default GTFS data from Renfe web - Alta velocidad, Larga distancia y Media distancia");
-                    "https://ssl.renfe.com/gtransit/Fichero_AV_LD/google_transit.zip"
-                },
-                true => {
-                    println!("Loading Cercanías GTFS data from Renfe web - long load time");
-                    "https://ssl.renfe.com/ftransit/Fichero_CER_FOMENTO/fomento_transit.zip"
-                },
-            },
-        )
-        .expect("Error downloading GTFS zip file");
-    let mut body = Vec::new();
-    res.read_to_end(&mut body)?;
-    let cursor = std::io::Cursor::new(body);
-
-    let gtfs = Gtfs::from_reader(cursor).expect("Error parsing GTFS zip");
-
-    gtfs.print_stats();
+    let feed = if cercanias {
+      Feed::Cercanias
+    } else {
+      Feed::Default
+    };
+    let data = crate::cache::load(feed).map_err(PyRuntimeError::new_err)?;
 
     Ok(Renfe {
-      gtfs,
+      data,
       schedules: Vec::new(),
     })
   }
 
   pub fn all_stations(&self) -> PyResult<Vec<Station>> {
     let stations: Vec<Station> = self
-      .gtfs
-      .stops
+      .data
+      .stations
       .iter()
-      .map(|s| Station {
-        name: s.1.name.clone().unwrap(),
-        id: s.1.id.clone(),
+      .map(|(id, station)| Station {
+        name: station.name.clone(),
+        id: id.clone(),
       })
       .collect();
     Ok(stations)
@@ -77,20 +71,18 @@ impl Renfe {
 
   pub fn stations_match(&self, station: String) -> PyResult<Vec<Station>> {
     let found: Vec<Station> = self
-      .gtfs
-      .stops
+      .data
+      .stations
       .iter()
-      .filter(|s| {
-        s.1
+      .filter(|(_, candidate)| {
+        candidate
           .name
-          .clone()
-          .unwrap()
           .to_lowercase()
           .contains(&station.to_lowercase())
       })
-      .map(|s| Station {
-        name: s.1.name.clone().unwrap(),
-        id: s.1.id.clone(),
+      .map(|(id, station)| Station {
+        name: station.name.clone(),
+        id: id.clone(),
       })
       .collect();
     Ok(found)
@@ -122,7 +114,7 @@ impl Renfe {
     year: i32,
     sorted: bool,
   ) -> PyResult<()> {
-    let gtfs = &self.gtfs;
+    let data = &self.data;
     // the date for which schedules are needed
     let date = i16::try_from(year)
       .ok()
@@ -138,50 +130,18 @@ impl Renfe {
       },
     };
 
-    let trips: Vec<_> = gtfs
+    let trips: Vec<Trip> = data
       .trips
-      .values()
-      .filter(|trip| is_service_active(gtfs, &trip.service_id, date))
-      .filter_map(|trip| {
-        let stop_times: Vec<_> = trip
-          .stop_times
-          .iter()
-          .filter_map(|stop_time| {
-            Some(StopTime {
-              stop_id: stop_time.stop.id.clone(),
-              arrival: stop_time.arrival_time?,
-              departure: stop_time.departure_time?,
-            })
-          })
-          .collect();
-        (stop_times.len() >= 2).then(|| Trip {
-          id: trip.id.clone(),
-          name: gtfs
-            .get_route(&trip.route_id)
-            .ok()
-            .and_then(|route| route.short_name.clone().or_else(|| route.long_name.clone()))
-            .or_else(|| trip.trip_short_name.clone())
-            .unwrap_or_else(|| trip.route_id.clone()),
-          stop_times,
-        })
+      .iter()
+      .filter(|trip| {
+        is_service_active(&data.calendar, &data.calendar_dates, &trip.service_id, date)
       })
-      .collect();
-    let transfers: Vec<_> = gtfs
-      .stops
-      .values()
-      .flat_map(|stop| {
-        stop.transfers.iter().map(|transfer| Transfer {
-          from_stop_id: stop.id.clone(),
-          to_stop_id: transfer.to_stop_id.clone(),
-          duration: (transfer.transfer_type != TransferType::Impossible)
-            .then(|| transfer.min_transfer_time.unwrap_or(5 * 60)),
-        })
-      })
+      .map(|trip| trip.trip.clone())
       .collect();
 
     let mut schedules: Vec<_> = find_journeys(
       &trips,
-      &transfers,
+      &data.transfers,
       origin_station_id,
       destination_station_id,
     )
@@ -200,7 +160,13 @@ impl Renfe {
         departure_time: seconds_to_time(departure)?,
         arrival_time: seconds_to_time(arrival)?,
         duration: TimeDelta::seconds(i64::from(arrival.saturating_sub(departure))),
-        transfers: journey.transfers(),
+        transfers: schedule_transfers(&journey, |stop_id| {
+          data
+            .stations
+            .get(stop_id)
+            .map(|stop| stop.name.clone())
+            .unwrap_or_else(|| stop_id.to_owned())
+        }),
       })
     })
     .collect();
@@ -247,12 +213,64 @@ impl Renfe {
             track.duration.num_hours(),
             track.duration.num_minutes() % 60
           ),
-          track.transfers
+          track.transfers.len()
         );
+        for (index, transfer) in track.transfers.iter().enumerate() {
+          println!(
+            "      Transfer {} at {}: arrive {}, depart {} ({})",
+            index + 1,
+            transfer.location,
+            format_time(transfer.arrival_time),
+            format_time(transfer.departure_time),
+            format_duration(transfer.duration)
+          );
+        }
       }
       println!("=========================================================================");
     }
   }
+}
+
+fn schedule_transfers(
+  journey: &Journey,
+  stop_name: impl Fn(&str) -> String,
+) -> Vec<ScheduleTransfer> {
+  journey
+    .legs
+    .windows(2)
+    .filter_map(|legs| {
+      let arriving_leg = &legs[0];
+      let departing_leg = &legs[1];
+      let arrival_location = stop_name(&arriving_leg.to_stop_id);
+      let departure_location = stop_name(&departing_leg.from_stop_id);
+      let location = if arriving_leg.to_stop_id == departing_leg.from_stop_id {
+        arrival_location
+      } else {
+        format!("{arrival_location} → {departure_location}")
+      };
+
+      Some(ScheduleTransfer {
+        location,
+        arrival_time: seconds_to_time(arriving_leg.arrival)?,
+        departure_time: seconds_to_time(departing_leg.departure)?,
+        duration: TimeDelta::seconds(i64::from(
+          departing_leg.departure.saturating_sub(arriving_leg.arrival),
+        )),
+      })
+    })
+    .collect()
+}
+
+fn format_time(time: NaiveTime) -> String {
+  format!("{:02}:{:02}", time.hour(), time.minute())
+}
+
+fn format_duration(duration: TimeDelta) -> String {
+  format!(
+    "{:02}:{:02}",
+    duration.num_hours(),
+    duration.num_minutes() % 60
+  )
 }
 
 fn seconds_to_time(seconds: u32) -> Option<NaiveTime> {
@@ -260,9 +278,14 @@ fn seconds_to_time(seconds: u32) -> Option<NaiveTime> {
 }
 
 // Helper function to check if a service is active on a given date
-fn is_service_active(gtfs: &Gtfs, service_id: &str, date: Date) -> bool {
+fn is_service_active(
+  calendar: &HashMap<String, ServiceCalendar>,
+  calendar_dates: &HashMap<String, Vec<ServiceCalendarDate>>,
+  service_id: &str,
+  date: Date,
+) -> bool {
   // First check the `calendar.txt`
-  if let Some(calendar) = gtfs.calendar.get(service_id) {
+  if let Some(calendar) = calendar.get(service_id) {
     let weekday = match date.weekday() {
       Weekday::Monday => calendar.monday,
       Weekday::Tuesday => calendar.tuesday,
@@ -275,10 +298,10 @@ fn is_service_active(gtfs: &Gtfs, service_id: &str, date: Date) -> bool {
 
     if weekday && date >= calendar.start_date && date <= calendar.end_date {
       // this should never happen - but a check is for free
-      if let Some(calendar_dates) = gtfs.calendar_dates.get(service_id) {
+      if let Some(calendar_dates) = calendar_dates.get(service_id) {
         for date_override in calendar_dates {
           if date_override.date == date {
-            return !(date_override.exception_type == gtfs_structures::Exception::Deleted);
+            return date_override.added;
           }
         }
       }
@@ -287,13 +310,72 @@ fn is_service_active(gtfs: &Gtfs, service_id: &str, date: Date) -> bool {
   }
 
   // Then check the `calendar_dates.txt` for exceptions
-  if let Some(calendar_dates) = gtfs.calendar_dates.get(service_id) {
+  if let Some(calendar_dates) = calendar_dates.get(service_id) {
     for date_override in calendar_dates {
       if date_override.date == date {
-        return date_override.exception_type == gtfs_structures::Exception::Added;
+        return date_override.added;
       }
     }
   }
 
   false
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+  use crate::router::Leg;
+
+  fn leg(name: &str, from: &str, to: &str, departure: u32, arrival: u32) -> Leg {
+    Leg {
+      trip_id: name.into(),
+      name: name.into(),
+      from_stop_id: from.into(),
+      to_stop_id: to.into(),
+      departure,
+      arrival,
+    }
+  }
+
+  #[test]
+  fn describes_transfer_times_durations_and_locations() {
+    let journey = Journey {
+      legs: vec![
+        leg("A", "origin", "central", 8 * 3_600, 9 * 3_600),
+        leg("B", "central", "north", 9 * 3_600 + 15 * 60, 10 * 3_600),
+        leg(
+          "C",
+          "south",
+          "destination",
+          10 * 3_600 + 30 * 60,
+          11 * 3_600,
+        ),
+      ],
+    };
+
+    let transfers = schedule_transfers(&journey, |id| match id {
+      "central" => "Central Station".into(),
+      "north" => "North Station".into(),
+      "south" => "South Station".into(),
+      _ => id.into(),
+    });
+
+    assert_eq!(
+      transfers,
+      vec![
+        ScheduleTransfer {
+          location: "Central Station".into(),
+          arrival_time: NaiveTime::from_hms_opt(9, 0, 0).unwrap(),
+          departure_time: NaiveTime::from_hms_opt(9, 15, 0).unwrap(),
+          duration: TimeDelta::minutes(15),
+        },
+        ScheduleTransfer {
+          location: "North Station → South Station".into(),
+          arrival_time: NaiveTime::from_hms_opt(10, 0, 0).unwrap(),
+          departure_time: NaiveTime::from_hms_opt(10, 30, 0).unwrap(),
+          duration: TimeDelta::minutes(30),
+        },
+      ]
+    );
+  }
 }
