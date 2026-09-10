@@ -1,3 +1,4 @@
+mod cache;
 pub mod cli;
 pub mod renfe;
 mod router;

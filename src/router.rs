@@ -1,26 +1,28 @@
 use std::collections::{HashMap, HashSet};
 
+use serde::{Deserialize, Serialize};
+
 pub const MAX_TRANSFERS: usize = 3;
 const MAX_LEGS: usize = MAX_TRANSFERS + 1;
 const DEFAULT_TRANSFER_TIME: u32 = 5 * 60;
 const TRANSFER_PENALTY: u32 = 15 * 60;
 const MAX_JOURNEY_TIME: u32 = 24 * 60 * 60;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct StopTime {
   pub stop_id: String,
   pub arrival: u32,
   pub departure: u32,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Trip {
   pub id: String,
   pub name: String,
   pub stop_times: Vec<StopTime>,
 }
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct Transfer {
   pub from_stop_id: String,
   pub to_stop_id: String,
