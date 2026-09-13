@@ -1,5 +1,9 @@
 # Changelog
 
+## v6.2.0 (2026-09-13)
+
+* Allow selecting a station when a name matches multiple stations [#211](https://github.com/gerardcl/renfe-cli/issues/211)
+
 ## v6.1.0 (2026-09-12)
 
 * Add GTFS data caching [#209](https://github.com/gerardcl/renfe-cli/issues/209)

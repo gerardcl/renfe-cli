@@ -88,22 +88,6 @@ impl Renfe {
     Ok(found)
   }
 
-  pub fn filter_station(&self, station: String) -> PyResult<Station> {
-    match self.stations_match(station.clone()) {
-      Ok(v) if v.len() == 1 => {
-        println!(
-          "Provided input '{}' does a match with '{:?}'",
-          station, v[0]
-        );
-        Ok(v[0].clone())
-      },
-      Ok(v) => Err(PyValueError::new_err(format!(
-        "Provided input '{station}' does match with '{v:?}' -> There must be ONLY one match"
-      ))),
-      Err(e) => Err(e),
-    }
-  }
-
   // Function to get train schedules between an origin and a destination on a given date
   pub fn set_train_schedules(
     &mut self,
