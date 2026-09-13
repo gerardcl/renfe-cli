@@ -61,8 +61,6 @@ Let's show an example of minimal inputs (origin and destination stations) with s
 ```bash
 $ renfe-cli  -f girona -t "puerta de atocha" -d 30
 Loading default GTFS data from Renfe web - Alta velocidad, Larga distancia y Media distancia
-Provided input 'girona' does a match with 'Estación de tren Girona'
-Provided input 'puerta de atocha' does a match with 'Estación de tren Madrid-Puerta de Atocha'
 Today is: 2024-9-29
 Searching timetable for date: 2024-9-30
 Origin station: Estación de tren Girona
@@ -90,8 +88,6 @@ Let's show an example using Renfe Cercanías GTFS dataset:
 ```bash
 $ renfe-cli -f chamartín -t "tres cantos" -c
 Loading Cercanías GTFS data from Renfe web - long load time
-Provided input 'chamartín' does a match with 'Station { name: "Estación de tren Madrid-Chamartín-Clara Campoamor", id: "17000" }'
-Provided input 'tres cantos' does a match with 'Station { name: "Estación de tren Tres Cantos (apt)", id: "17004" }'
 Today is: 2024-10-2
 Searching timetable for date: 2024-10-2
 Origin station: Estación de tren Madrid-Chamartín-Clara Campoamor
@@ -115,6 +111,32 @@ Destination station: Estación de tren Tres Cantos (apt)
 -----------------------------------------------------------
    C4b         |    23:16     |    23:33     |    00:17     
 ===========================================================
+```
+
+### Selecting a station
+
+Station names are matched case-insensitively and may be abbreviated. If the
+provided text matches more than one station, the CLI sorts the matches by name
+and asks which station to use. Select it by entering its 1-based ordinal number:
+
+```text
+$ renfe-cli -f madrid -t girona
+Multiple stations match 'madrid':
+  1. Estación de tren Madrid - Atocha Cercanias
+  2. Estación de tren Madrid-Chamartin
+  3. Estación de tren Madrid-Nuevos Ministerios
+  4. Estación de tren Madrid-Principe Pio
+  5. Estación de tren Madrid-Puerta de Atocha
+  6. Estación de tren Madrid-Ramon Y Cajal
+  7. Estación de tren Madrid-Recoletos
+Select a station [1-7]: 5
+```
+
+Invalid numbers are rejected and the CLI asks again. If the provided text does
+not match any station, it reports the input without presenting a selection:
+
+```text
+ValueError: Provided input 'unknown' does not match any station name
 ```
 
 Journeys with connections include the details of every transfer directly
@@ -159,13 +181,10 @@ GTFS data:
   Shapes: 0
   Fare attributes: 0
   Feed info: 0
->>> renfe.filter_station("madrid")
-Traceback (most recent call last):
-  File "<stdin>", line 1, in <module>
-ValueError: Provided input 'madrid' does match with '[Station { name: "Estación de tren Madrid-Puerta de Atocha", id: "60000" }, Station { name: "Estación de tren Madrid - Atocha Cercanias", id: "18000" }, Station { name: "Estación de tren Madrid-Principe Pio", id: "10000" }, Station { name: "Estación de tren Madrid-Ramon Y Cajal", id: "97201" }, Station { name: "Estación de tren Madrid-Nuevos Ministerios", id: "18002" }, Station { name: "Estación de tren Madrid-Chamartin", id: "17000" }, Station { name: "Estación de tren Madrid-Recoletos", id: "18001" }]' -> There must be ONLY one match
->>> renfe.filter_station("girona")
-Provided input 'girona' does a match with 'Station { name: "Estación de tren Girona", id: "79300" }'
-<builtins.Station object at 0x77f04173d070>
+>>> len(renfe.stations_match("madrid"))
+7
+>>> len(renfe.stations_match("girona"))
+1
 >>> renfe.print_timetable()
 
 No schedules available...won't print timetable.
