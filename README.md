@@ -230,10 +230,10 @@ This project uses [Just](https://github.com/casey/just) as the command runner fo
 
 Make sure the following stack is installed:
 
-    [Rust](https://www.rust-lang.org/)
-    [uv](https://docs.astral.sh/uv/getting-started/installation/)
-    [Just](https://github.com/casey/just)
-    [prek](https://prek.j178.dev/)
+  - [Rust](https://www.rust-lang.org/)
+  - [uv](https://docs.astral.sh/uv/getting-started/installation/)
+  - [Just](https://github.com/casey/just)
+  - [prek](https://prek.j178.dev/)
 
 ### Setup and workflows
 
