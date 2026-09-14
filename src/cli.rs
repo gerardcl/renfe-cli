@@ -22,6 +22,11 @@ fn run(registry: Registry) -> PyResult<()> {
   let now = Utc::now();
   let opts = set_opts();
 
+  if args.len() == 1 {
+    print_usage(&program, opts);
+    return Ok(());
+  }
+
   let matches = match opts.parse(&args[1..]) {
     Ok(m) => m,
     Err(f) => {
