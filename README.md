@@ -52,7 +52,12 @@ Options:
     -s, --sort          Option to sort the timetable by Duration
     -c, --cercanias     Option to search over Renfe Cercanías
     -h, --help          Print this help menu
+    -V, --version       Print version information
 ```
+
+At startup, `renfe-cli` prints its running version and checks for a newer
+release. Python installations check PyPI, while the native Rust binary checks
+crates.io. Use `renfe-cli --version` to print only the running version.
 
 ### **Getting the timetable**
 
@@ -94,22 +99,22 @@ Origin station: Estación de tren Madrid-Chamartín-Clara Campoamor
 Destination station: Estación de tren Tres Cantos (apt)
 
 =========================TIMETABLE=========================
-  Train        |   Departure  |   Arrival    |   Duration    
+  Train        |   Departure  |   Arrival    |   Duration
 -----------------------------------------------------------
-   C4b         |    05:06     |    05:22     |    00:16     
+   C4b         |    05:06     |    05:22     |    00:16
 -----------------------------------------------------------
-   C4b         |    05:38     |    05:55     |    00:17     
+   C4b         |    05:38     |    05:55     |    00:17
 -----------------------------------------------------------
-   C4b         |    06:10     |    06:27     |    00:17     
+   C4b         |    06:10     |    06:27     |    00:17
 -----------------------------------------------------------
 .........
 .........
 -----------------------------------------------------------
-   C4b         |    21:56     |    22:13     |    00:17     
+   C4b         |    21:56     |    22:13     |    00:17
 -----------------------------------------------------------
-   C4b         |    22:20     |    22:37     |    00:17     
+   C4b         |    22:20     |    22:37     |    00:17
 -----------------------------------------------------------
-   C4b         |    23:16     |    23:33     |    00:17     
+   C4b         |    23:16     |    23:33     |    00:17
 ===========================================================
 ```
 
@@ -165,7 +170,7 @@ Python 3.12.6 (main, Sep  8 2024, 13:18:56) [GCC 14.2.1 20240805] on linux
 Type "help", "copyright", "credits" or "license" for more information.
 >>> import renfe_cli
 >>> renfe = renfe_cli.
-renfe_cli.Renfe()    renfe_cli.Schedule(  renfe_cli.Station(   renfe_cli.main()     renfe_cli.renfe_cli  
+renfe_cli.Renfe()    renfe_cli.Schedule(  renfe_cli.Station(   renfe_cli.main()     renfe_cli.renfe_cli
 >>> renfe = renfe_cli.Renfe()
 Traceback (most recent call last):
   File "<stdin>", line 1, in <module>

@@ -5,9 +5,18 @@ use std::env;
 use std::io::{self, BufRead, Write};
 
 use crate::renfe::{Renfe, Station};
+use crate::version::{Registry, print_version_status};
 
 #[pyfunction]
 pub fn main() -> PyResult<()> {
+  run(Registry::PyPi)
+}
+
+pub fn native_main() -> PyResult<()> {
+  run(Registry::CratesIo)
+}
+
+fn run(registry: Registry) -> PyResult<()> {
   let args: Vec<String> = env::args().collect();
   let program = args[0].clone();
   let now = Utc::now();
@@ -24,6 +33,13 @@ pub fn main() -> PyResult<()> {
     print_usage(&program, opts);
     return Ok(());
   }
+
+  if matches.opt_present("V") {
+    println!("renfe-cli {}", env!("CARGO_PKG_VERSION"));
+    return Ok(());
+  }
+
+  print_version_status(registry);
 
   let mut renfe = Renfe::new(matches.opt_present("c"))?;
 
@@ -148,6 +164,7 @@ fn set_opts() -> Options {
   opts.optflag("s", "sort", "Option to sort the timetable by Duration");
   opts.optflag("c", "cercanias", "Option to search over Renfe Cercanías");
   opts.optflag("h", "help", "Print this help menu");
+  opts.optflag("V", "version", "Print version information");
 
   opts
 }
