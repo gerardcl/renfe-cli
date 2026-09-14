@@ -1,0 +1,74 @@
+minimum_prek_version = "0.5.0"
+
+[priorities]
+format = 0
+checks = 10
+tests = 20
+
+# Fast, generic hygiene checks.
+[[repos]]
+repo = "builtin"
+hooks = [
+  { id = "trailing-whitespace", priority = "format" },
+  { id = "end-of-file-fixer", priority = "format" },
+  { id = "check-added-large-files", priority = "checks" },
+  { id = "check-merge-conflict", priority = "checks" },
+  { id = "check-toml", priority = "checks" },
+  { id = "check-yaml", priority = "checks" },
+]
+
+# Rust formatting.
+[[repos]]
+repo = "local"
+hooks = [
+  {
+    id = "cargo-fmt",
+    name = "cargo fmt",
+    language = "system",
+    entry = "cargo fmt --all -- --check",
+    pass_filenames = false,
+    priority = "format",
+  },
+]
+
+# Rust linting.
+[[repos]]
+repo = "local"
+hooks = [
+  {
+    id = "cargo-clippy",
+    name = "cargo clippy",
+    language = "system",
+    entry = "cargo clippy --all-targets --all-features -- -D warnings",
+    pass_filenames = false,
+    priority = "checks",
+  },
+]
+
+# Make sure the Rust crate still builds.
+[[repos]]
+repo = "local"
+hooks = [
+  {
+    id = "cargo-check",
+    name = "cargo check",
+    language = "system",
+    entry = "cargo check --all-targets --all-features",
+    pass_filenames = false,
+    priority = "checks",
+  },
+]
+
+# Make sure the Rust crate still tests.
+[[repos]]
+repo = "local"
+hooks = [
+  {
+    id = "cargo-test",
+    name = "cargo test",
+    language = "system",
+    entry = "cargo test --all-features",
+    pass_filenames = false,
+    priority = "tests",
+  },
+]

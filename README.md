@@ -224,15 +224,22 @@ If Renfe's GTFS dataset is being kept not up to date or you find any issue to be
 
 This project uses Rust bindings for the Python interpreter through [PyO3](https://pyo3.rs) and [Maturin](https://www.maturin.rs/) to build and install the Python package.
 
-Install [uv](https://docs.astral.sh/uv/getting-started/installation/) first, then set up a development environment:
+This project uses [Just](https://github.com/casey/just) as the command runner for local development.
+
+### Prerequisites
+
+Make sure the following stack is installed:
+
+    [Rust](https://www.rust-lang.org/)
+    [uv](https://docs.astral.sh/uv/getting-started/installation/)
+    [Just](https://github.com/casey/just)
+    [prek](https://prek.j178.dev/)
+
+### Setup and workflows
 
 ```bash
 git clone https://github.com/gerardcl/renfe-cli.git
 cd renfe-cli
-uv python install 3.10
-uv venv --python 3.10
-source .venv/bin/activate
-uvx maturin develop --uv
+just dev-setup
+just # to see available commands
 ```
-
-Maturin compiles the Rust code, generates the Python bindings, and installs the package into `.venv` for local use as a library or CLI. After changing Rust code, run `uvx maturin develop --uv` again to rebuild it. Use `uv run renfe-cli --help` to run the development installation.

@@ -1,5 +1,9 @@
 # Changelog
 
+## v6.3.0 (2026-09-14)
+
+* Enable version flag and version status check [#180](https://github.com/gerardcl/renfe-cli/issues/180)
+
 ## v6.2.0 (2026-09-13)
 
 * Allow selecting a station when a name matches multiple stations [#211](https://github.com/gerardcl/renfe-cli/issues/211)
