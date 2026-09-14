@@ -2,6 +2,7 @@ mod cache;
 pub mod cli;
 pub mod renfe;
 mod router;
+mod version;
 
 use pyo3::prelude::*;
 
