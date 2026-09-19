@@ -1,5 +1,9 @@
 # Changelog
 
+## v6.3.1 (2026-09-15)
+
+* Python CLI does not show help message when no args are provided [#214](https://github.com/gerardcl/renfe-cli/issues/214)
+
 ## v6.3.0 (2026-09-14)
 
 * Enable version flag and version status check [#180](https://github.com/gerardcl/renfe-cli/issues/180)

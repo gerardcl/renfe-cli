@@ -1,6 +1,7 @@
 use chrono::{Datelike, Utc};
 use getopts::Options;
-use pyo3::{PyResult, exceptions::PyValueError, pyfunction};
+use pyo3::types::PyAnyMethods;
+use pyo3::{PyResult, Python, exceptions::PyValueError, pyfunction};
 use std::env;
 use std::io::{self, BufRead, Write};
 
@@ -8,16 +9,19 @@ use crate::renfe::{Renfe, Station};
 use crate::version::{Registry, print_version_status};
 
 #[pyfunction]
-pub fn main() -> PyResult<()> {
-  run(Registry::PyPi)
+pub fn main(py: Python<'_>) -> PyResult<()> {
+  let args = py
+    .import("sys")?
+    .getattr("argv")?
+    .extract::<Vec<String>>()?;
+  run(Registry::PyPi, args)
 }
 
 pub fn native_main() -> PyResult<()> {
-  run(Registry::CratesIo)
+  run(Registry::CratesIo, env::args().collect())
 }
 
-fn run(registry: Registry) -> PyResult<()> {
-  let args: Vec<String> = env::args().collect();
+fn run(registry: Registry, args: Vec<String>) -> PyResult<()> {
   let program = args[0].clone();
   let now = Utc::now();
   let opts = set_opts();
