@@ -34,7 +34,7 @@ setup-hooks:
 
 # Run the development CLI through the local virtual environment.
 run *args:
-    uv run renfe-cli {{args}}
+    uv run --no-sync renfe-cli {{args}}
 
 # Open a Python shell in the development environment.
 python:
